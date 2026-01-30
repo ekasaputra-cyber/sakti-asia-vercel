@@ -1,285 +1,427 @@
 <!DOCTYPE html>
-<html lang="id" class="scroll-smooth">
+<html lang="id" class="scroll-smooth overflow-x-hidden">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>SAKTI - Informatics Hive</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
+
     <script>
         tailwind.config = {
             darkMode: 'class',
             theme: {
                 extend: {
                     fontFamily: { 'poppins': ['Poppins', 'sans-serif'] },
-                    colors: { hive: { primary: '#f59e0b', secondary: '#ea580c' } }
+                    colors: { hive: { primary: '#f59e0b', secondary: '#ea580c', dark: '#020617' } }
                 }
             }
         }
     </script>
 
     <style>
-        body { font-family: 'Poppins', sans-serif; transition: all 0.5s ease; overflow-x: hidden; }
-        .dark { background-color: #020617; color: #f8fafc; }
-        .light { background-color: #f8fafc; color: #0f172a; }
+        /* Base Reset & Settings */
+        html, body { width: 100%; max-width: 100vw; overflow-x: hidden; position: relative; margin: 0; padding: 0; }
+        body { font-family: 'Poppins', sans-serif; transition: all 0.5s ease; background-color: #020617; color: #f8fafc; }
         
-        .glass-card { backdrop-filter: blur(12px); border: 1px solid rgba(245, 158, 11, 0.15); }
-        .dark .glass-card { background: rgba(255, 255, 255, 0.02); }
-        .light .glass-card { background: rgba(0, 0, 0, 0.02); }
+        /* Particle Background */
+        #particle-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+        
+        /* Glassmorphism Utilities */
+        .glass-card { backdrop-filter: blur(12px); border: 1px solid rgba(245, 158, 11, 0.15); position: relative; overflow: hidden; background: rgba(2, 6, 23, 0.6); }
 
-        .gallery-item { overflow: hidden; position: relative; border-radius: 1rem; }
-        .gallery-item img { transition: transform 0.5s ease; filter: grayscale(40%); }
-        @media (min-width: 768px) { .gallery-item:hover img { transform: scale(1.1); filter: grayscale(0%); } }
+        /* Gallery Hover Effects */
+        .gallery-item { border-radius: 1.5rem; border: 1px solid rgba(245, 158, 11, 0.1); position: relative; aspect-ratio: 4/5; overflow: hidden; }
+        .gallery-item img { transition: all 0.7s ease; filter: grayscale(80%) brightness(0.7); width: 100%; height: 100%; object-fit: cover; }
+        /* Group hover logic handled in HTML classes now */
         
-        section { scroll-margin-top: 80px; }
-        
-        /* Mobile Menu Animation */
-        #mobileMenu { transition: transform 0.3s ease-in-out; }
-        .menu-open #mobileMenu { transform: translateX(0); }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-track { background: #020617; }
-        ::-webkit-scrollbar-thumb { background: #f59e0b; border-radius: 10px; }
+        /* Smooth Scrolling Offsets */
+        section { scroll-margin-top: 80px; width: 100%; max-width: 100vw; }
+        #mobileMenu { transition: transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1.0); }
     </style>
 </head>
 <body class="dark" id="mainBody">
+    <canvas id="particle-canvas"></canvas>
 
-    <nav class="fixed w-full z-[110] px-4 md:px-6 py-4 flex justify-between items-center bg-transparent backdrop-blur-xl border-b border-hive-primary/10">
-        <div class="flex items-center gap-2 md:gap-3">
-            <i class="fas fa-bee text-hive-primary text-xl md:text-2xl animate-bounce"></i>
-            <span class="text-lg md:text-xl font-black tracking-tighter uppercase">SAKTI<span class="text-hive-primary">.</span></span>
+    <nav class="fixed w-full top-0 left-0 z-[110] px-6 py-4 flex justify-between items-center bg-transparent backdrop-blur-xl border-b border-amber-500/10">
+        <div class="flex items-center gap-2">
+            <span class="iconify text-hive-primary text-2xl animate-bounce" data-icon="si:javascript-line"></span>
+            <span class="text-lg font-black tracking-tighter uppercase">SAKTI<span class="text-hive-primary">.</span></span>
         </div>
-        
-        <div class="hidden md:flex gap-6 text-[10px] font-bold uppercase tracking-widest opacity-70">
-            <a href="#about" class="hover:text-hive-primary transition" data-key="nav-about">Tentang</a>
-            <a href="#vision" class="hover:text-hive-primary transition" data-key="nav-vision">Visi</a>
-            <a href="#proker" class="hover:text-hive-primary transition" data-key="nav-proker">Proker</a>
-            <a href="#gallery" class="hover:text-hive-primary transition" data-key="nav-gallery">Galeri</a>
+        <div class="hidden md:flex gap-8 text-[10px] font-bold uppercase tracking-widest opacity-70">
+            <a href="#about" class="hover:text-hive-primary transition">Tentang</a>
+            <a href="#proker" class="hover:text-hive-primary transition">Proker</a>
+            <a href="#structure" class="hover:text-hive-primary transition">Struktur</a>
+            <a href="#gallery" class="hover:text-hive-primary transition">Galeri</a>
         </div>
-
-        <div class="flex items-center gap-2 md:gap-3">
-            <select onchange="updateLang(this.value)" class="bg-transparent text-[10px] font-bold border-none cursor-pointer focus:ring-0 outline-none">
-                <option value="id" class="text-black">ID</option>
-                <option value="en" class="text-black">EN</option>
-            </select>
+        <div class="flex items-center gap-3">
             <button onclick="toggleMode()" class="p-2 rounded-full hover:bg-hive-primary/10 transition">
-                <i id="modeIcon" class="fas fa-moon text-hive-primary"></i>
+                <span id="modeIcon" class="iconify text-hive-primary text-xl" data-icon="heroicons:moon-20-solid"></span>
             </button>
-            <a href="#join" class="hidden sm:block bg-hive-primary text-black px-4 md:px-5 py-2 rounded-full text-[10px] font-extrabold hover:shadow-lg transition">GABUNG</a>
-            
             <button onclick="toggleMobileMenu()" class="md:hidden text-hive-primary p-2">
-                <i class="fas fa-bars text-xl"></i>
+                <span class="iconify text-2xl" data-icon="heroicons:bars-3-bottom-right-20-solid"></span>
             </button>
+            <a href="#join" class="hidden sm:block bg-hive-primary text-black px-6 py-2 rounded-full text-[10px] font-extrabold shadow-lg hover:bg-white transition-all uppercase">GABUNG</a>
         </div>
     </nav>
 
-    <div id="mobileMenu" class="fixed inset-0 z-[105] bg-black/95 transform translate-x-full md:hidden flex flex-col justify-center items-center gap-8 text-2xl font-black uppercase">
-        <button onclick="toggleMobileMenu()" class="absolute top-6 right-6 text-hive-primary text-3xl">&times;</button>
-        <a href="#about" onclick="toggleMobileMenu()" class="hover:text-hive-primary" data-key="nav-about">Tentang</a>
-        <a href="#vision" onclick="toggleMobileMenu()" class="hover:text-hive-primary" data-key="nav-vision">Visi</a>
-        <a href="#proker" onclick="toggleMobileMenu()" class="hover:text-hive-primary" data-key="nav-proker">Proker</a>
-        <a href="#gallery" onclick="toggleMobileMenu()" class="hover:text-hive-primary" data-key="nav-gallery">Galeri</a>
-        <a href="#join" onclick="toggleMobileMenu()" class="bg-hive-primary text-black px-10 py-3 rounded-full text-sm">GABUNG</a>
+    <div id="mobileMenu" class="fixed inset-0 z-[120] bg-[#020617] transform translate-x-full md:hidden flex flex-col justify-center items-center gap-8 text-2xl font-black uppercase text-center px-6">
+        <button onclick="toggleMobileMenu()" class="absolute top-6 right-6 text-hive-primary text-4xl">
+            <span class="iconify" data-icon="heroicons:x-mark-20-solid"></span>
+        </button>
+        <a href="#about" onclick="toggleMobileMenu()" class="hover:text-hive-primary transition">Tentang</a>
+        <a href="#proker" onclick="toggleMobileMenu()" class="hover:text-hive-primary transition">Proker</a>
+        <a href="#structure" onclick="toggleMobileMenu()" class="hover:text-hive-primary transition">Struktur</a>
+        <a href="#gallery" onclick="toggleMobileMenu()" class="hover:text-hive-primary transition">Galeri</a>
+        <a href="#join" onclick="toggleMobileMenu()" class="bg-hive-primary text-black px-12 py-4 rounded-full text-sm">DAFTAR SEKARANG</a>
     </div>
 
-    <section class="min-h-screen flex flex-col justify-center items-center text-center px-6 pt-20">
-        <h1 class="text-5xl sm:text-6xl md:text-[8rem] font-black tracking-tighter leading-[0.9] mb-6 uppercase" data-aos="zoom-out">
-            HIMAPRO TI <br> <span class="text-hive-primary italic">SAKTI.</span>
+    <section class="min-h-screen flex flex-col justify-center items-center text-center px-6 pt-20 overflow-hidden relative">
+        <div class="absolute w-64 h-64 bg-hive-primary/10 rounded-full blur-[120px] -z-10 animate-pulse"></div>
+        <h1 class="text-5xl sm:text-7xl md:text-[8rem] font-black tracking-tighter leading-none mb-6 uppercase w-full break-words" data-aos="zoom-out">
+            HIMAPRO TI <br class="md:hidden"> <span class="text-hive-primary italic drop-shadow-lg">SAKTI.</span>
         </h1>
-        <p class="text-slate-500 max-w-sm md:max-w-xl text-base md:text-lg font-light mb-8" data-key="hero-desc">Organisasi pusat inovasi mahasiswa Teknik Informatika.</p>
-        <div class="flex flex-col sm:flex-row gap-4" data-aos="fade-up">
-            <a href="#about" class="bg-hive-primary text-black px-8 py-3 rounded-full font-bold text-sm shadow-xl shadow-orange-500/10">Get Started</a>
-        </div>
+        <p class="text-slate-500 max-w-xs md:max-w-xl text-base md:text-lg font-light mb-10 mx-auto px-2">Organisasi pusat inovasi mahasiswa Teknik Informatika.</p>
+        <a href="#about" class="bg-hive-primary text-black px-10 py-4 rounded-full font-bold text-sm shadow-xl hover:scale-105 transition active:scale-95 text-center uppercase">Eksplorasi</a>
     </section>
 
-    <section id="about" class="py-20 px-6 max-w-6xl mx-auto">
-        <div class="grid md:grid-cols-2 gap-10 md:gap-16 items-center">
+    <section id="about" class="py-24 px-8 md:px-12 max-w-full overflow-hidden">
+        <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 md:gap-16 items-center text-center md:text-left">
             <div data-aos="fade-right">
-                <h2 class="text-3xl md:text-4xl font-black mb-4 md:mb-6 uppercase" data-key="about-title">Apa itu SAKTI?</h2>
-                <p class="opacity-70 leading-relaxed text-sm md:text-lg mb-6" data-key="about-desc">
-                    SAKTI adalah Himpunan Mahasiswa Program Studi Teknik Informatika yang berfungsi sebagai wadah kolaborasi, 
-                    riset, dan pengembangan potensi mahasiswa di bidang teknologi informasi.
-                </p>
-                <div class="flex gap-6 md:gap-8 border-t border-hive-primary/20 pt-6">
-                    <div>
-                        <div class="text-xl md:text-2xl font-black text-hive-primary">200+</div>
-                        <div class="text-[8px] md:text-[10px] uppercase font-bold opacity-50">Members</div>
-                    </div>
-                    <div>
-                        <div class="text-xl md:text-2xl font-black text-hive-primary">3</div>
-                        <div class="text-[8px] md:text-[10px] uppercase font-bold opacity-50">Tech Divisions</div>
-                    </div>
+                <h2 class="text-3xl md:text-4xl font-black mb-6 uppercase">The Informatics Hive</h2>
+                <p class="opacity-70 leading-relaxed text-sm md:text-lg mb-8">Wadah riset dan pengembangan potensi mahasiswa dalam ekosistem digital yang dinamis.</p>
+                <div class="flex justify-center md:justify-start gap-10 border-t border-hive-primary/20 pt-8">
+                    <div><div class="text-3xl font-black text-hive-primary">200+</div><div class="text-[10px] uppercase font-bold opacity-50">Members</div></div>
+                    <div><div class="text-3xl font-black text-hive-primary">3</div><div class="text-[10px] uppercase font-bold opacity-50">Divisions</div></div>
                 </div>
             </div>
-            <div class="grid grid-cols-2 gap-3 md:gap-4" data-aos="fade-left">
-                <div class="glass-card p-4 md:p-6 rounded-2xl text-center">
-                    <i class="fas fa-code text-hive-primary text-xl md:text-2xl mb-2 md:mb-4"></i>
-                    <h4 class="font-bold text-[8px] md:text-xs uppercase tracking-widest">Coding</h4>
+            <div class="grid grid-cols-2 gap-8 md:gap-4 py-8">
+                <div class="glass-card p-8 rounded-3xl text-center" data-aos="fade-up">
+                    <span class="iconify text-hive-primary text-4xl mx-auto mb-4" data-icon="heroicons:code-bracket-20-solid"></span>
+                    <h4 class="font-bold text-[10px] uppercase tracking-widest">Coding</h4>
                 </div>
-                <div class="glass-card p-4 md:p-6 rounded-2xl text-center">
-                    <i class="fas fa-network-wired text-hive-primary text-xl md:text-2xl mb-2 md:mb-4"></i>
-                    <h4 class="font-bold text-[8px] md:text-xs uppercase tracking-widest">Networking</h4>
+                <div class="glass-card p-8 rounded-3xl text-center" data-aos="fade-up" data-aos-delay="100">
+                    <span class="iconify text-hive-primary text-4xl mx-auto mb-4" data-icon="heroicons:user-group-20-solid"></span>
+                    <h4 class="font-bold text-[10px] uppercase tracking-widest">Community</h4>
                 </div>
-                <div class="glass-card p-4 md:p-6 rounded-2xl text-center">
-                    <i class="fas fa-lightbulb text-hive-primary text-xl md:text-2xl mb-2 md:mb-4"></i>
-                    <h4 class="font-bold text-[8px] md:text-xs uppercase tracking-widest">Innovation</h4>
+                <div class="glass-card p-8 rounded-3xl text-center" data-aos="fade-up" data-aos-delay="200">
+                    <span class="iconify text-hive-primary text-4xl mx-auto mb-4" data-icon="heroicons:light-bulb-20-solid"></span>
+                    <h4 class="font-bold text-[10px] uppercase tracking-widest">Innovation</h4>
                 </div>
-                <div class="glass-card p-4 md:p-6 rounded-2xl text-center">
-                    <i class="fas fa-users text-hive-primary text-xl md:text-2xl mb-2 md:mb-4"></i>
-                    <h4 class="font-bold text-[8px] md:text-xs uppercase tracking-widest">Community</h4>
+                <div class="glass-card p-8 rounded-3xl text-center" data-aos="fade-up" data-aos-delay="300">
+                    <span class="iconify text-hive-primary text-4xl mx-auto mb-4" data-icon="heroicons:sparkles-20-solid"></span>
+                    <h4 class="font-bold text-[10px] uppercase tracking-widest">Creative</h4>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="vision" class="py-20 px-6 max-w-6xl mx-auto border-t border-white/5">
-        <div class="text-center mb-10 md:mb-16">
-            <h2 class="text-3xl md:text-4xl font-black uppercase mb-4" data-key="nav-vision">Visi & Misi</h2>
-            <div class="h-1 w-16 md:w-20 bg-hive-primary mx-auto"></div>
-        </div>
-        <div class="grid md:grid-cols-2 gap-6 md:gap-8">
-            <div class="glass-card p-6 md:p-10 rounded-3xl" data-aos="fade-up">
-                <h3 class="text-hive-primary font-bold mb-4 uppercase tracking-[0.2em] text-[10px]">Vision</h3>
-                <p class="text-lg md:text-xl font-semibold italic opacity-90 leading-relaxed" data-key="vision-content">
-                    "Menjadi pionir inovasi teknologi yang kompetitif dan berintegritas di tingkat nasional."
-                </p>
+    <section id="vision" class="py-24 px-8 bg-white/5 border-t border-white/5">
+        <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-12">
+            <div data-aos="fade-up">
+                <h3 class="text-hive-primary font-bold uppercase tracking-widest text-sm mb-4">Visi Kami</h3>
+                <p class="text-xl md:text-2xl font-bold leading-tight italic">"Menjadi pusat inkubasi teknologi unggulan yang melahirkan inovator berintegritas."</p>
             </div>
-            <div class="glass-card p-6 md:p-10 rounded-3xl" data-aos="fade-up" data-aos-delay="100">
-                <h3 class="text-hive-primary font-bold mb-4 uppercase tracking-[0.2em] text-[10px]">Mission</h3>
-                <ul class="space-y-3 md:space-y-4 text-xs md:text-sm opacity-80" data-key="mission-list">
-                    <li class="flex gap-3"><i class="fas fa-check-circle text-hive-primary"></i> Membangun ekosistem pembelajaran TI yang dinamis.</li>
-                    <li class="flex gap-3"><i class="fas fa-check-circle text-hive-primary"></i> Menjalin kemitraan industri.</li>
+            <div data-aos="fade-up" data-aos-delay="100">
+                <h3 class="text-hive-primary font-bold uppercase tracking-widest text-sm mb-4">Misi Kami</h3>
+                <ul class="space-y-4 text-sm md:text-base opacity-80 text-left">
+                    <li class="flex gap-3"><span class="iconify text-hive-primary mt-1" data-icon="heroicons:check-badge-20-solid"></span> Riset teknologi berkelanjutan.</li>
+                    <li class="flex gap-3"><span class="iconify text-hive-primary mt-1" data-icon="heroicons:check-badge-20-solid"></span> Membangun networking industri global.</li>
+                    <li class="flex gap-3"><span class="iconify text-hive-primary mt-1" data-icon="heroicons:check-badge-20-solid"></span> Pengembangan soft skill leadership.</li>
                 </ul>
             </div>
         </div>
     </section>
 
-    <section id="proker" class="py-20 px-6 bg-black/20 overflow-hidden">
-        <div class="max-w-6xl mx-auto">
-            <h2 class="text-3xl md:text-4xl font-black text-center uppercase mb-12 md:mb-20" data-key="proker-title">Roadmap Proker</h2>
+    <section id="division" class="py-24 px-8 max-w-6xl mx-auto text-center">
+        <h2 class="text-3xl md:text-4xl font-black uppercase mb-16 underline decoration-hive-primary decoration-4">Pilar Divisi</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="glass-card p-12 rounded-[2.5rem]" data-aos="flip-left">
+                <span class="iconify text-hive-primary text-5xl mx-auto mb-6" data-icon="heroicons:shield-check-20-solid"></span>
+                <h4 class="text-xl font-bold mb-4">INTERNAL</h4>
+                <p class="text-sm opacity-60">Manajemen soliditas dan keanggotaan organisasi.</p>
+            </div>
+            <div class="glass-card p-12 rounded-[2.5rem]" data-aos="flip-left" data-aos-delay="100">
+                <span class="iconify text-hive-primary text-5xl mx-auto mb-6" data-icon="heroicons:globe-alt-20-solid"></span>
+                <h4 class="text-xl font-bold mb-4">EKSTERNAL</h4>
+                <p class="text-sm opacity-60">Hubungan strategis industri dan masyarakat luar.</p>
+            </div>
+            <div class="glass-card p-12 rounded-[2.5rem]" data-aos="flip-left" data-aos-delay="200">
+                <span class="iconify text-hive-primary text-5xl mx-auto mb-6" data-icon="heroicons:beaker-20-solid"></span>
+                <h4 class="text-xl font-bold mb-4">MINAT BAKAT</h4>
+                <p class="text-sm opacity-60">Pengembangan kreativitas dan hobi non-akademik.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="proker" class="py-24 px-6 md:px-12 overflow-hidden relative">
+        <div class="max-w-5xl mx-auto relative">
             
-            <div class="relative">
-                <div class="absolute left-0 md:left-1/2 transform md:-translate-x-1/2 h-full w-0.5 bg-hive-primary/30"></div>
-                
-                <div class="mb-12 md:mb-24 relative flex flex-col md:flex-row items-start md:items-center" data-aos="fade-up">
-                    <div class="md:w-1/2 md:text-right md:pr-16 w-full pl-8 md:pl-0">
-                        <span class="text-[10px] font-bold text-hive-primary uppercase tracking-[0.3em]">Q1 - Mar 2026</span>
-                        <h4 class="text-xl md:text-2xl font-black mt-1 uppercase">Hackathon Hive</h4>
-                        <p class="text-xs md:text-sm opacity-60 mt-2 max-w-sm md:ml-auto" data-key="proker-1">Kompetisi koding 24 jam untuk memecahkan masalah UMKM lokal.</p>
+            <div class="text-center mb-16" data-aos="fade-down">
+                <h2 class="text-3xl md:text-4xl font-black uppercase mb-4">Agenda <span class="text-hive-primary">Sakti</span></h2>
+                <p class="text-slate-400 max-w-xl mx-auto text-sm">Rangkaian kegiatan strategis dalam satu periode kepengurusan.</p>
+            </div>
+
+            <div class="absolute left-8 md:left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-hive-primary/10 via-hive-primary to-hive-primary/10 md:-translate-x-1/2"></div>
+
+            <div class="space-y-12 md:space-y-24 relative z-10">
+                <div class="relative grid md:grid-cols-2 gap-8 items-center">
+                    <div class="absolute left-8 md:left-1/2 w-4 h-4 bg-hive-primary rounded-full shadow-[0_0_15px_rgba(245,158,11,0.8)] -translate-x-[7px] md:-translate-x-1/2 z-20"></div>
+                    <div class="pl-16 md:pl-0 md:pr-12 md:text-right" data-aos="fade-right">
+                        <div class="glass-card p-6 rounded-2xl border-l-4 md:border-l-0 md:border-r-4 border-hive-primary hover:bg-hive-primary/5 transition">
+                            <span class="text-hive-primary font-bold text-xs tracking-widest uppercase mb-2 block">Februari - Maret</span>
+                            <h3 class="text-xl font-bold text-white mb-2">Open Recruitment</h3>
+                            <p class="text-slate-400 text-xs leading-relaxed">Fase seleksi anggota baru melalui serangkaian tes logika, wawancara, dan focus group discussion.</p>
+                        </div>
                     </div>
-                    <div class="absolute left-[-4px] md:left-1/2 transform md:-translate-x-1/2 w-2.5 h-2.5 rounded-full bg-slate-700 border-2 border-slate-900 z-10"></div>
+                    <div class="hidden md:block"></div>
                 </div>
 
-                <div class="mb-12 md:mb-24 relative flex flex-col md:flex-row items-start md:items-center" data-aos="fade-up">
-                    <div class="absolute left-[-4px] md:left-1/2 transform md:-translate-x-1/2 w-2.5 h-2.5 rounded-full bg-hive-primary shadow-[0_0_15px_rgba(245,158,11,0.5)] z-10"></div>
-                    <div class="md:w-1/2 md:ml-auto md:pl-16 w-full pl-8">
-                        <span class="text-[10px] font-bold text-hive-primary uppercase tracking-[0.3em]">Q2 - Jun 2026</span>
-                        <h4 class="text-xl md:text-2xl font-black mt-1 uppercase">Tech Conference</h4>
-                        <p class="text-xs md:text-sm opacity-60 mt-2 max-w-sm" data-key="proker-2">Seminar nasional menghadirkan pakar industri.</p>
+                <div class="relative grid md:grid-cols-2 gap-8 items-center">
+                    <div class="absolute left-8 md:left-1/2 w-4 h-4 bg-black border-2 border-hive-primary rounded-full -translate-x-[7px] md:-translate-x-1/2 z-20"></div>
+                    <div class="hidden md:block"></div>
+                    <div class="pl-16 md:pl-12" data-aos="fade-left">
+                        <div class="glass-card p-6 rounded-2xl border-l-4 border-hive-primary hover:bg-hive-primary/5 transition">
+                            <span class="text-hive-primary font-bold text-xs tracking-widest uppercase mb-2 block">April</span>
+                            <h3 class="text-xl font-bold text-white mb-2">LDK & Inaugurasi</h3>
+                            <p class="text-slate-400 text-xs leading-relaxed">Latihan Dasar Kepemimpinan di alam terbuka untuk membentuk mentalitas baja dan solidaritas angkatan.</p>
+                        </div>
                     </div>
                 </div>
+
+                <div class="relative grid md:grid-cols-2 gap-8 items-center">
+                    <div class="absolute left-8 md:left-1/2 w-4 h-4 bg-hive-primary rounded-full shadow-[0_0_15px_rgba(245,158,11,0.8)] -translate-x-[7px] md:-translate-x-1/2 z-20"></div>
+                    <div class="pl-16 md:pl-0 md:pr-12 md:text-right" data-aos="fade-right">
+                        <div class="glass-card p-6 rounded-2xl border-l-4 md:border-l-0 md:border-r-4 border-hive-primary hover:bg-hive-primary/5 transition">
+                            <span class="text-hive-primary font-bold text-xs tracking-widest uppercase mb-2 block">Juni - Agustus</span>
+                            <h3 class="text-xl font-bold text-white mb-2">Hive Tech Summit</h3>
+                            <p class="text-slate-400 text-xs leading-relaxed">Event tahunan terbesar: Kompetisi coding nasional, seminar teknologi, dan pameran startup mahasiswa.</p>
+                        </div>
+                    </div>
+                    <div class="hidden md:block"></div>
+                </div>
+
+                <div class="relative grid md:grid-cols-2 gap-8 items-center">
+                    <div class="absolute left-8 md:left-1/2 w-4 h-4 bg-black border-2 border-hive-primary rounded-full -translate-x-[7px] md:-translate-x-1/2 z-20"></div>
+                    <div class="hidden md:block"></div>
+                    <div class="pl-16 md:pl-12" data-aos="fade-left">
+                        <div class="glass-card p-6 rounded-2xl border-l-4 border-hive-primary hover:bg-hive-primary/5 transition">
+                            <span class="text-hive-primary font-bold text-xs tracking-widest uppercase mb-2 block">Oktober</span>
+                            <h3 class="text-xl font-bold text-white mb-2">Community Dev</h3>
+                            <p class="text-slate-400 text-xs leading-relaxed">Program pengabdian masyarakat. Digitalisasi UMKM dan pelatihan IT untuk sekolah pedesaan.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex justify-center mt-12" data-aos="zoom-in">
+                <a href="#join" class="glass-card px-8 py-3 rounded-full text-[10px] font-bold uppercase hover:bg-hive-primary hover:text-black transition border border-hive-primary/30">
+                    Lihat Jadwal Lengkap
+                </a>
             </div>
         </div>
     </section>
 
-    <section id="gallery" class="py-20 px-6">
+    <section id="structure" class="py-24 px-8 overflow-hidden">
         <div class="max-w-6xl mx-auto">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 md:mb-12 gap-2">
-                <h2 class="text-3xl md:text-4xl font-black uppercase" data-key="nav-gallery">Galeri</h2>
-                <p class="text-[10px] font-bold opacity-50 uppercase tracking-widest">Moments in Code</p>
+            <h2 class="text-3xl md:text-4xl font-black uppercase text-center mb-16" data-aos="fade-down">
+                Core <span class="text-hive-primary">Leadership</span>
+            </h2>
+            
+            <div class="flex justify-center mb-12">
+                <div class="glass-card p-6 rounded-3xl w-full max-w-sm text-center group hover:bg-hive-primary/10 transition" data-aos="zoom-in">
+                    <div class="w-24 h-24 mx-auto rounded-full overflow-hidden border-2 border-hive-primary mb-4">
+                        <img src="https://img.freepik.com/premium-vector/business-global-economy_24877-41082.jpg" alt="Ketua" class="w-full h-full object-cover">
+                    </div>
+                    <h3 class="text-xl font-bold">Heru Pratama</h3>
+                    <p class="text-hive-primary text-xs font-bold uppercase tracking-widest mb-2">Ketua Umum</p>
+                    <p class="text-xs opacity-60 italic">"Inovasi dimulai dari keberanian untuk memulai."</p>
+                </div>
             </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                <div class="gallery-item h-64 md:h-80" data-aos="fade-up">
-                    <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=800" class="w-full h-full object-cover">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent p-4 flex flex-col justify-end">
-                        <h4 class="font-bold text-white text-sm">Advanced Web Dev</h4>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="glass-card p-6 rounded-3xl text-center group hover:bg-hive-primary/5 transition" data-aos="fade-up" data-aos-delay="100">
+                    <div class="w-16 h-16 mx-auto rounded-full overflow-hidden border border-white/20 mb-4 grayscale group-hover:grayscale-0 transition">
+                        <img src="https://img.freepik.com/premium-vector/business-global-economy_24877-41082.jpg" alt="Koord. Internal" class="w-full h-full object-cover">
                     </div>
+                    <h4 class="font-bold">Aldo Tegar Laksana</h4>
+                    <p class="text-[10px] uppercase opacity-50 tracking-widest">Koord. Internal</p>
                 </div>
-                <div class="gallery-item h-64 md:h-80" data-aos="fade-up" data-aos-delay="100">
-                    <img src="https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=800" class="w-full h-full object-cover">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent p-4 flex flex-col justify-end">
-                        <h4 class="font-bold text-white text-sm">Strategic Planning</h4>
+                <div class="glass-card p-6 rounded-3xl text-center group hover:bg-hive-primary/5 transition" data-aos="fade-up" data-aos-delay="200">
+                    <div class="w-16 h-16 mx-auto rounded-full overflow-hidden border border-white/20 mb-4 grayscale group-hover:grayscale-0 transition">
+                        <img src="https://img.freepik.com/premium-vector/business-global-economy_24877-41082.jpg" alt="Koord. Eksternal" class="w-full h-full object-cover">
                     </div>
+                    <h4 class="font-bold">Irsal Fauzan A</h4>
+                    <p class="text-[10px] uppercase opacity-50 tracking-widest">Koord. Eksternal</p>
                 </div>
-                <div class="gallery-item h-64 md:h-80" data-aos="fade-up" data-aos-delay="200">
-                    <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=800" class="w-full h-full object-cover">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent p-4 flex flex-col justify-end">
-                        <h4 class="font-bold text-white text-sm">Hackathon SAKTI</h4>
+                <div class="glass-card p-6 rounded-3xl text-center group hover:bg-hive-primary/5 transition" data-aos="fade-up" data-aos-delay="300">
+                    <div class="w-16 h-16 mx-auto rounded-full overflow-hidden border border-white/20 mb-4 grayscale group-hover:grayscale-0 transition">
+                        <img src="https://img.freepik.com/premium-vector/business-global-economy_24877-41082.jpg" alt="Koord. Minat Bakat" class="w-full h-full object-cover">
                     </div>
+                    <h4 class="font-bold">M Fajar Ramadlan</h4>
+                    <p class="text-[10px] uppercase opacity-50 tracking-widest">Koord. Minat Bakat</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="join" class="py-20 px-6 text-center bg-hive-primary text-black">
-        <h2 class="text-4xl md:text-7xl font-black mb-6 uppercase" data-key="cta-title">Siap Masuk Koloni?</h2>
-        <p class="max-w-xs md:max-w-2xl mx-auto mb-8 font-bold opacity-80 text-sm md:text-base" data-key="cta-desc">Jadilah bagian dari perubahan besar dalam ekosistem Teknik Informatika.</p>
-        <button class="bg-black text-white px-8 md:px-10 py-3 md:py-4 rounded-full font-black text-xs md:text-sm uppercase tracking-widest hover:scale-105 transition-all shadow-xl">Daftar Sekarang</button>
+    <section id="gallery" class="py-24 px-8 overflow-hidden">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-3xl md:text-4xl font-black uppercase text-center mb-16">Galeri Hive</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+                
+                <div class="gallery-item group cursor-pointer" data-aos="zoom-in">
+                    <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=800" alt="Work">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-end p-6 translate-y-4 group-hover:translate-y-0">
+                        <span class="text-hive-primary text-[10px] font-bold uppercase tracking-widest mb-1">Riset Bersama</span>
+                        <h3 class="text-lg font-bold leading-tight">Study Club AI</h3>
+                    </div>
+                </div>
+
+                <div class="gallery-item md:translate-y-12 group cursor-pointer" data-aos="zoom-in" data-aos-delay="100">
+                    <img src="https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=800" alt="Meet">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-end p-6 translate-y-4 group-hover:translate-y-0">
+                        <span class="text-hive-primary text-[10px] font-bold uppercase tracking-widest mb-1">Networking</span>
+                        <h3 class="text-lg font-bold leading-tight">Kunjungan Industri</h3>
+                    </div>
+                </div>
+
+                <div class="gallery-item group cursor-pointer" data-aos="zoom-in" data-aos-delay="200">
+                    <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=800" alt="Code">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-end p-6 translate-y-4 group-hover:translate-y-0">
+                        <span class="text-hive-primary text-[10px] font-bold uppercase tracking-widest mb-1">Kompetisi</span>
+                        <h3 class="text-lg font-bold leading-tight">Hackathon 2025</h3>
+                    </div>
+                </div>
+
+            </div>
+        </div>
     </section>
 
-    <footer class="py-10 text-center opacity-50 text-[8px] md:text-[10px] font-bold tracking-[0.2em] md:tracking-[0.3em] uppercase px-6">
-        © 2026 SAKTI - Informatics Engineering. Power by SAKTIASIA.
+    <footer class="mt-24 pt-20 pb-10 px-8 bg-[#01040f] border-t border-white/5 relative overflow-hidden">
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-2xl h-64 bg-hive-primary/5 blur-[100px] pointer-events-none"></div>
+
+        <div class="max-w-6xl mx-auto grid md:grid-cols-4 gap-12 mb-16 relative z-10">
+            <div class="md:col-span-2">
+                <div class="flex items-center gap-2 mb-6">
+                    <span class="iconify text-hive-primary text-3xl" data-icon="si:javascript-line"></span>
+                    <span class="text-2xl font-black tracking-tighter uppercase">SAKTI<span class="text-hive-primary">.</span></span>
+                </div>
+                <p class="text-slate-500 text-sm leading-relaxed max-w-sm mb-6">
+                    Membangun ekosistem teknologi yang inklusif dan progresif untuk mahasiswa Teknik Informatika masa depan.
+                </p>
+                <div class="flex gap-4">
+                    <a href="#" class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center hover:bg-hive-primary hover:border-hive-primary hover:text-black transition group">
+                        <span class="iconify text-xl" data-icon="mdi:instagram"></span>
+                    </a>
+                    <a href="#" class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center hover:bg-hive-primary hover:border-hive-primary hover:text-black transition group">
+                        <span class="iconify text-xl" data-icon="mdi:linkedin"></span>
+                    </a>
+                    <a href="#" class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center hover:bg-hive-primary hover:border-hive-primary hover:text-black transition group">
+                        <span class="iconify text-xl" data-icon="mdi:github"></span>
+                    </a>
+                    <a href="#" class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center hover:bg-hive-primary hover:border-hive-primary hover:text-black transition group">
+                        <span class="iconify text-xl" data-icon="mdi:youtube"></span>
+                    </a>
+                </div>
+            </div>
+
+            <div>
+                <h4 class="font-bold text-white uppercase tracking-widest text-xs mb-6">Navigasi</h4>
+                <ul class="space-y-4 text-sm text-slate-400">
+                    <li><a href="#about" class="hover:text-hive-primary transition">Tentang Kami</a></li>
+                    <li><a href="#vision" class="hover:text-hive-primary transition">Visi & Misi</a></li>
+                    <li><a href="#proker" class="hover:text-hive-primary transition">Agenda & Event</a></li>
+                    <li><a href="#structure" class="hover:text-hive-primary transition">Struktur Tim</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="font-bold text-white uppercase tracking-widest text-xs mb-6">Hubungi Kami</h4>
+                <ul class="space-y-4 text-sm text-slate-400">
+                    <li class="flex items-start gap-3">
+                        <span class="iconify text-hive-primary text-lg mt-0.5" data-icon="heroicons:map-pin-20-solid"></span>
+                        <span>Gedung Utama, Lantai 1<br>Fakultas Teknik dan Desain Institut ASIA Malang</span>
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <span class="iconify text-hive-primary text-lg" data-icon="heroicons:envelope-20-solid"></span>
+                        <span>halo@sakti-asia.id</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="border-t border-white/5 pt-8 text-center md:text-left flex flex-col md:flex-row justify-between items-center gap-4">
+            <p class="text-[10px] font-bold tracking-[0.2em] uppercase opacity-40">© 2026 SAKTI ASIA</p>
+            <p class="text-[10px] font-bold tracking-[0.2em] uppercase opacity-40">Est. 2024</p>
+        </div>
     </footer>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
-        AOS.init({ duration: 800, once: true });
+        AOS.init({ duration: 1000, once: true, disable: 'mobile' });
 
-        function toggleMobileMenu() {
-            document.getElementById('mobileMenu').classList.toggle('translate-x-full');
-            document.body.classList.toggle('overflow-hidden');
-        }
+        // Particle System
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        const iconPaths = ["{}", "JS", "PY", "</>", "TS", "#"];
 
-        const langData = {
-            id: {
-                "nav-about": "Tentang", "nav-vision": "Visi", "nav-proker": "Proker", "nav-gallery": "Galeri", "nav-join": "GABUNG",
-                "hero-desc": "Organisasi pusat inovasi mahasiswa Teknik Informatika.",
-                "about-title": "Apa itu SAKTI?", "about-desc": "SAKTI adalah Himpunan Mahasiswa Program Studi Teknik Informatika yang berfungsi sebagai wadah kolaborasi, riset, dan pengembangan potensi.",
-                "vision-content": "\"Menjadi pionir inovasi teknologi yang kompetitif dan berintegritas di tingkat nasional.\"",
-                "mission-list": "<li class='flex gap-3'><i class='fas fa-check-circle text-hive-primary'></i> Membangun ekosistem pembelajaran TI yang dinamis.</li><li class='flex gap-3'><i class='fas fa-check-circle text-hive-primary'></i> Menjalin kemitraan industri.</li>",
-                "proker-title": "Roadmap Proker", "proker-1": "Kompetisi koding 24 jam untuk UMKM.", "proker-2": "Seminar nasional pakar teknologi.",
-                "cta-title": "SIAP MASUK KOLONI?", "cta-desc": "Jadilah bagian dari perubahan besar dalam ekosistem Teknik Informatika."
-            },
-            en: {
-                "nav-about": "About", "nav-vision": "Vision", "nav-proker": "Workplan", "nav-gallery": "Gallery", "nav-join": "JOIN",
-                "hero-desc": "The central hub for Informatics Engineering student innovation.",
-                "about-title": "What is SAKTI?", "about-desc": "SAKTI is an Informatics Student Association serving as a hub for collaboration, research, and talent development.",
-                "vision-content": "\"To be a pioneer in technology innovation that is competitive and has integrity at the national level.\"",
-                "mission-list": "<li class='flex gap-3'><i class='fas fa-check-circle text-hive-primary'></i> Building a dynamic IT learning ecosystem.</li><li class='flex gap-3'><i class='fas fa-check-circle text-hive-primary'></i> Forge industrial partnerships.</li>",
-                "proker-title": "Project Roadmap", "proker-1": "24-hour coding competition for SMEs.", "proker-2": "National tech expert seminar.",
-                "cta-title": "READY TO JOIN THE HIVE?", "cta-desc": "Be part of a major transformation in the Informatics Engineering ecosystem."
+        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        
+        class Particle {
+            constructor() { this.reset(); }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.vx = (Math.random() - 0.5) * 0.3;
+                this.vy = (Math.random() - 0.5) * 0.3;
+                this.size = Math.random() * 25 + 20;
+                this.opacity = Math.random() * 0.15;
+                this.text = iconPaths[Math.floor(Math.random() * iconPaths.length)];
             }
-        };
-
-        function updateLang(lang) {
-            document.querySelectorAll('[data-key]').forEach(el => {
-                const key = el.getAttribute('data-key');
-                el.innerHTML = langData[lang][key];
-            });
+            update() {
+                this.x += this.vx; this.y += this.vy;
+                if (this.x < -50 || this.x > canvas.width + 50 || this.y < -50 || this.y > canvas.height + 50) this.reset();
+            }
+            draw() {
+                ctx.font = `bold ${this.size}px monospace`;
+                ctx.fillStyle = `rgba(245, 158, 11, ${this.opacity})`;
+                ctx.fillText(this.text, this.x, this.y);
+            }
         }
 
-        function toggleMode() {
-            const body = document.getElementById('mainBody');
-            const icon = document.getElementById('modeIcon');
-            body.classList.toggle('dark');
-            body.classList.toggle('light');
-            icon.classList.toggle('fa-moon');
-            icon.classList.toggle('fa-sun');
+        function initParticles() { particles = []; for (let i = 0; i < 35; i++) particles.push(new Particle()); }
+        
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animate);
         }
         
-        // GSAP Parallax Effect (Only on Desktop)
-        if (window.innerWidth > 768) {
-            window.addEventListener('mousemove', (e) => {
-                const x = (e.clientX / window.innerWidth - 0.5) * 20;
-                const y = (e.clientY / window.innerHeight - 0.5) * 20;
-                gsap.to("h1", { duration: 1, x: x, y: y, ease: "power2.out" });
-            });
+        window.addEventListener('resize', resize); 
+        resize(); 
+        initParticles(); 
+        animate();
+
+        // UI Interactions
+        function toggleMobileMenu() { 
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('translate-x-full');
+            document.body.classList.toggle('overflow-hidden');
+        }
+        
+        function toggleMode() { 
+            const body = document.getElementById('mainBody');
+            body.classList.toggle('dark'); body.classList.toggle('light'); 
+            const icon = document.getElementById('modeIcon');
+            const isDark = body.classList.contains('dark');
+            icon.setAttribute('data-icon', isDark ? 'heroicons:moon-20-solid' : 'heroicons:sun-20-solid');
         }
     </script>
 </body>
