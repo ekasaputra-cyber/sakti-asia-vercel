@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAKTI - Informatics Hive</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { 'poppins': ['Poppins', 'sans-serif'] },
+                    colors: { hive: { primary: '#f59e0b', secondary: '#ea580c' } }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { font-family: 'Poppins', sans-serif; transition: all 0.5s ease; overflow-x: hidden; }
+        .dark { background-color: #020617; color: #f8fafc; }
+        .light { background-color: #f8fafc; color: #0f172a; }
+        
+        .glass-card { backdrop-filter: blur(12px); border: 1px solid rgba(245, 158, 11, 0.15); }
+        .dark .glass-card { background: rgba(255, 255, 255, 0.02); }
+        .light .glass-card { background: rgba(0, 0, 0, 0.02); }
+
+        .gallery-item { overflow: hidden; position: relative; border-radius: 1rem; }
+        .gallery-item img { transition: transform 0.5s ease; filter: grayscale(40%); }
+        @media (min-width: 768px) { .gallery-item:hover img { transform: scale(1.1); filter: grayscale(0%); } }
+        
+        section { scroll-margin-top: 80px; }
+        
+        /* Mobile Menu Animation */
+        #mobileMenu { transition: transform 0.3s ease-in-out; }
+        .menu-open #mobileMenu { transform: translateX(0); }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: #020617; }
+        ::-webkit-scrollbar-thumb { background: #f59e0b; border-radius: 10px; }
+    </style>
+</head>
+<body class="dark" id="mainBody">
+
+    <nav class="fixed w-full z-[110] px-4 md:px-6 py-4 flex justify-between items-center bg-transparent backdrop-blur-xl border-b border-hive-primary/10">
+        <div class="flex items-center gap-2 md:gap-3">
+            <i class="fas fa-bee text-hive-primary text-xl md:text-2xl animate-bounce"></i>
+            <span class="text-lg md:text-xl font-black tracking-tighter uppercase">SAKTI<span class="text-hive-primary">.</span></span>
+        </div>
+        
+        <div class="hidden md:flex gap-6 text-[10px] font-bold uppercase tracking-widest opacity-70">
+            <a href="#about" class="hover:text-hive-primary transition" data-key="nav-about">Tentang</a>
+            <a href="#vision" class="hover:text-hive-primary transition" data-key="nav-vision">Visi</a>
+            <a href="#proker" class="hover:text-hive-primary transition" data-key="nav-proker">Proker</a>
+            <a href="#gallery" class="hover:text-hive-primary transition" data-key="nav-gallery">Galeri</a>
+        </div>
+
+        <div class="flex items-center gap-2 md:gap-3">
+            <select onchange="updateLang(this.value)" class="bg-transparent text-[10px] font-bold border-none cursor-pointer focus:ring-0 outline-none">
+                <option value="id" class="text-black">ID</option>
+                <option value="en" class="text-black">EN</option>
+            </select>
+            <button onclick="toggleMode()" class="p-2 rounded-full hover:bg-hive-primary/10 transition">
+                <i id="modeIcon" class="fas fa-moon text-hive-primary"></i>
+            </button>
+            <a href="#join" class="hidden sm:block bg-hive-primary text-black px-4 md:px-5 py-2 rounded-full text-[10px] font-extrabold hover:shadow-lg transition">GABUNG</a>
+            
+            <button onclick="toggleMobileMenu()" class="md:hidden text-hive-primary p-2">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+        </div>
+    </nav>
+
+    <div id="mobileMenu" class="fixed inset-0 z-[105] bg-black/95 transform translate-x-full md:hidden flex flex-col justify-center items-center gap-8 text-2xl font-black uppercase">
+        <button onclick="toggleMobileMenu()" class="absolute top-6 right-6 text-hive-primary text-3xl">&times;</button>
+        <a href="#about" onclick="toggleMobileMenu()" class="hover:text-hive-primary" data-key="nav-about">Tentang</a>
+        <a href="#vision" onclick="toggleMobileMenu()" class="hover:text-hive-primary" data-key="nav-vision">Visi</a>
+        <a href="#proker" onclick="toggleMobileMenu()" class="hover:text-hive-primary" data-key="nav-proker">Proker</a>
+        <a href="#gallery" onclick="toggleMobileMenu()" class="hover:text-hive-primary" data-key="nav-gallery">Galeri</a>
+        <a href="#join" onclick="toggleMobileMenu()" class="bg-hive-primary text-black px-10 py-3 rounded-full text-sm">GABUNG</a>
+    </div>
+
+    <section class="min-h-screen flex flex-col justify-center items-center text-center px-6 pt-20">
+        <h1 class="text-5xl sm:text-6xl md:text-[8rem] font-black tracking-tighter leading-[0.9] mb-6 uppercase" data-aos="zoom-out">
+            HIMAPRO TI <br> <span class="text-hive-primary italic">SAKTI.</span>
+        </h1>
+        <p class="text-slate-500 max-w-sm md:max-w-xl text-base md:text-lg font-light mb-8" data-key="hero-desc">Organisasi pusat inovasi mahasiswa Teknik Informatika.</p>
+        <div class="flex flex-col sm:flex-row gap-4" data-aos="fade-up">
+            <a href="#about" class="bg-hive-primary text-black px-8 py-3 rounded-full font-bold text-sm shadow-xl shadow-orange-500/10">Get Started</a>
+        </div>
+    </section>
+
+    <section id="about" class="py-20 px-6 max-w-6xl mx-auto">
+        <div class="grid md:grid-cols-2 gap-10 md:gap-16 items-center">
+            <div data-aos="fade-right">
+                <h2 class="text-3xl md:text-4xl font-black mb-4 md:mb-6 uppercase" data-key="about-title">Apa itu SAKTI?</h2>
+                <p class="opacity-70 leading-relaxed text-sm md:text-lg mb-6" data-key="about-desc">
+                    SAKTI adalah Himpunan Mahasiswa Program Studi Teknik Informatika yang berfungsi sebagai wadah kolaborasi, 
+                    riset, dan pengembangan potensi mahasiswa di bidang teknologi informasi.
+                </p>
+                <div class="flex gap-6 md:gap-8 border-t border-hive-primary/20 pt-6">
+                    <div>
+                        <div class="text-xl md:text-2xl font-black text-hive-primary">200+</div>
+                        <div class="text-[8px] md:text-[10px] uppercase font-bold opacity-50">Members</div>
+                    </div>
+                    <div>
+                        <div class="text-xl md:text-2xl font-black text-hive-primary">3</div>
+                        <div class="text-[8px] md:text-[10px] uppercase font-bold opacity-50">Tech Divisions</div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-3 md:gap-4" data-aos="fade-left">
+                <div class="glass-card p-4 md:p-6 rounded-2xl text-center">
+                    <i class="fas fa-code text-hive-primary text-xl md:text-2xl mb-2 md:mb-4"></i>
+                    <h4 class="font-bold text-[8px] md:text-xs uppercase tracking-widest">Coding</h4>
+                </div>
+                <div class="glass-card p-4 md:p-6 rounded-2xl text-center">
+                    <i class="fas fa-network-wired text-hive-primary text-xl md:text-2xl mb-2 md:mb-4"></i>
+                    <h4 class="font-bold text-[8px] md:text-xs uppercase tracking-widest">Networking</h4>
+                </div>
+                <div class="glass-card p-4 md:p-6 rounded-2xl text-center">
+                    <i class="fas fa-lightbulb text-hive-primary text-xl md:text-2xl mb-2 md:mb-4"></i>
+                    <h4 class="font-bold text-[8px] md:text-xs uppercase tracking-widest">Innovation</h4>
+                </div>
+                <div class="glass-card p-4 md:p-6 rounded-2xl text-center">
+                    <i class="fas fa-users text-hive-primary text-xl md:text-2xl mb-2 md:mb-4"></i>
+                    <h4 class="font-bold text-[8px] md:text-xs uppercase tracking-widest">Community</h4>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="vision" class="py-20 px-6 max-w-6xl mx-auto border-t border-white/5">
+        <div class="text-center mb-10 md:mb-16">
+            <h2 class="text-3xl md:text-4xl font-black uppercase mb-4" data-key="nav-vision">Visi & Misi</h2>
+            <div class="h-1 w-16 md:w-20 bg-hive-primary mx-auto"></div>
+        </div>
+        <div class="grid md:grid-cols-2 gap-6 md:gap-8">
+            <div class="glass-card p-6 md:p-10 rounded-3xl" data-aos="fade-up">
+                <h3 class="text-hive-primary font-bold mb-4 uppercase tracking-[0.2em] text-[10px]">Vision</h3>
+                <p class="text-lg md:text-xl font-semibold italic opacity-90 leading-relaxed" data-key="vision-content">
+                    "Menjadi pionir inovasi teknologi yang kompetitif dan berintegritas di tingkat nasional."
+                </p>
+            </div>
+            <div class="glass-card p-6 md:p-10 rounded-3xl" data-aos="fade-up" data-aos-delay="100">
+                <h3 class="text-hive-primary font-bold mb-4 uppercase tracking-[0.2em] text-[10px]">Mission</h3>
+                <ul class="space-y-3 md:space-y-4 text-xs md:text-sm opacity-80" data-key="mission-list">
+                    <li class="flex gap-3"><i class="fas fa-check-circle text-hive-primary"></i> Membangun ekosistem pembelajaran TI yang dinamis.</li>
+                    <li class="flex gap-3"><i class="fas fa-check-circle text-hive-primary"></i> Menjalin kemitraan industri.</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section id="proker" class="py-20 px-6 bg-black/20 overflow-hidden">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-3xl md:text-4xl font-black text-center uppercase mb-12 md:mb-20" data-key="proker-title">Roadmap Proker</h2>
+            
+            <div class="relative">
+                <div class="absolute left-0 md:left-1/2 transform md:-translate-x-1/2 h-full w-0.5 bg-hive-primary/30"></div>
+                
+                <div class="mb-12 md:mb-24 relative flex flex-col md:flex-row items-start md:items-center" data-aos="fade-up">
+                    <div class="md:w-1/2 md:text-right md:pr-16 w-full pl-8 md:pl-0">
+                        <span class="text-[10px] font-bold text-hive-primary uppercase tracking-[0.3em]">Q1 - Mar 2026</span>
+                        <h4 class="text-xl md:text-2xl font-black mt-1 uppercase">Hackathon Hive</h4>
+                        <p class="text-xs md:text-sm opacity-60 mt-2 max-w-sm md:ml-auto" data-key="proker-1">Kompetisi koding 24 jam untuk memecahkan masalah UMKM lokal.</p>
+                    </div>
+                    <div class="absolute left-[-4px] md:left-1/2 transform md:-translate-x-1/2 w-2.5 h-2.5 rounded-full bg-slate-700 border-2 border-slate-900 z-10"></div>
+                </div>
+
+                <div class="mb-12 md:mb-24 relative flex flex-col md:flex-row items-start md:items-center" data-aos="fade-up">
+                    <div class="absolute left-[-4px] md:left-1/2 transform md:-translate-x-1/2 w-2.5 h-2.5 rounded-full bg-hive-primary shadow-[0_0_15px_rgba(245,158,11,0.5)] z-10"></div>
+                    <div class="md:w-1/2 md:ml-auto md:pl-16 w-full pl-8">
+                        <span class="text-[10px] font-bold text-hive-primary uppercase tracking-[0.3em]">Q2 - Jun 2026</span>
+                        <h4 class="text-xl md:text-2xl font-black mt-1 uppercase">Tech Conference</h4>
+                        <p class="text-xs md:text-sm opacity-60 mt-2 max-w-sm" data-key="proker-2">Seminar nasional menghadirkan pakar industri.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="gallery" class="py-20 px-6">
+        <div class="max-w-6xl mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 md:mb-12 gap-2">
+                <h2 class="text-3xl md:text-4xl font-black uppercase" data-key="nav-gallery">Galeri</h2>
+                <p class="text-[10px] font-bold opacity-50 uppercase tracking-widest">Moments in Code</p>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                <div class="gallery-item h-64 md:h-80" data-aos="fade-up">
+                    <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=800" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent p-4 flex flex-col justify-end">
+                        <h4 class="font-bold text-white text-sm">Advanced Web Dev</h4>
+                    </div>
+                </div>
+                <div class="gallery-item h-64 md:h-80" data-aos="fade-up" data-aos-delay="100">
+                    <img src="https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=800" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent p-4 flex flex-col justify-end">
+                        <h4 class="font-bold text-white text-sm">Strategic Planning</h4>
+                    </div>
+                </div>
+                <div class="gallery-item h-64 md:h-80" data-aos="fade-up" data-aos-delay="200">
+                    <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=800" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent p-4 flex flex-col justify-end">
+                        <h4 class="font-bold text-white text-sm">Hackathon SAKTI</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="join" class="py-20 px-6 text-center bg-hive-primary text-black">
+        <h2 class="text-4xl md:text-7xl font-black mb-6 uppercase" data-key="cta-title">Siap Masuk Koloni?</h2>
+        <p class="max-w-xs md:max-w-2xl mx-auto mb-8 font-bold opacity-80 text-sm md:text-base" data-key="cta-desc">Jadilah bagian dari perubahan besar dalam ekosistem Teknik Informatika.</p>
+        <button class="bg-black text-white px-8 md:px-10 py-3 md:py-4 rounded-full font-black text-xs md:text-sm uppercase tracking-widest hover:scale-105 transition-all shadow-xl">Daftar Sekarang</button>
+    </section>
+
+    <footer class="py-10 text-center opacity-50 text-[8px] md:text-[10px] font-bold tracking-[0.2em] md:tracking-[0.3em] uppercase px-6">
+        © 2026 SAKTI - Informatics Engineering. Power by SAKTIASIA.
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ duration: 800, once: true });
+
+        function toggleMobileMenu() {
+            document.getElementById('mobileMenu').classList.toggle('translate-x-full');
+            document.body.classList.toggle('overflow-hidden');
+        }
+
+        const langData = {
+            id: {
+                "nav-about": "Tentang", "nav-vision": "Visi", "nav-proker": "Proker", "nav-gallery": "Galeri", "nav-join": "GABUNG",
+                "hero-desc": "Organisasi pusat inovasi mahasiswa Teknik Informatika.",
+                "about-title": "Apa itu SAKTI?", "about-desc": "SAKTI adalah Himpunan Mahasiswa Program Studi Teknik Informatika yang berfungsi sebagai wadah kolaborasi, riset, dan pengembangan potensi.",
+                "vision-content": "\"Menjadi pionir inovasi teknologi yang kompetitif dan berintegritas di tingkat nasional.\"",
+                "mission-list": "<li class='flex gap-3'><i class='fas fa-check-circle text-hive-primary'></i> Membangun ekosistem pembelajaran TI yang dinamis.</li><li class='flex gap-3'><i class='fas fa-check-circle text-hive-primary'></i> Menjalin kemitraan industri.</li>",
+                "proker-title": "Roadmap Proker", "proker-1": "Kompetisi koding 24 jam untuk UMKM.", "proker-2": "Seminar nasional pakar teknologi.",
+                "cta-title": "SIAP MASUK KOLONI?", "cta-desc": "Jadilah bagian dari perubahan besar dalam ekosistem Teknik Informatika."
+            },
+            en: {
+                "nav-about": "About", "nav-vision": "Vision", "nav-proker": "Workplan", "nav-gallery": "Gallery", "nav-join": "JOIN",
+                "hero-desc": "The central hub for Informatics Engineering student innovation.",
+                "about-title": "What is SAKTI?", "about-desc": "SAKTI is an Informatics Student Association serving as a hub for collaboration, research, and talent development.",
+                "vision-content": "\"To be a pioneer in technology innovation that is competitive and has integrity at the national level.\"",
+                "mission-list": "<li class='flex gap-3'><i class='fas fa-check-circle text-hive-primary'></i> Building a dynamic IT learning ecosystem.</li><li class='flex gap-3'><i class='fas fa-check-circle text-hive-primary'></i> Forge industrial partnerships.</li>",
+                "proker-title": "Project Roadmap", "proker-1": "24-hour coding competition for SMEs.", "proker-2": "National tech expert seminar.",
+                "cta-title": "READY TO JOIN THE HIVE?", "cta-desc": "Be part of a major transformation in the Informatics Engineering ecosystem."
+            }
+        };
+
+        function updateLang(lang) {
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                el.innerHTML = langData[lang][key];
+            });
+        }
+
+        function toggleMode() {
+            const body = document.getElementById('mainBody');
+            const icon = document.getElementById('modeIcon');
+            body.classList.toggle('dark');
+            body.classList.toggle('light');
+            icon.classList.toggle('fa-moon');
+            icon.classList.toggle('fa-sun');
+        }
+        
+        // GSAP Parallax Effect (Only on Desktop)
+        if (window.innerWidth > 768) {
+            window.addEventListener('mousemove', (e) => {
+                const x = (e.clientX / window.innerWidth - 0.5) * 20;
+                const y = (e.clientY / window.innerHeight - 0.5) * 20;
+                gsap.to("h1", { duration: 1, x: x, y: y, ease: "power2.out" });
+            });
+        }
+    </script>
+</body>
+</html>
