@@ -4,7 +4,6 @@ import { leadershipData, coreBoard, departments } from "@/data/org-data";
 import TeamCard from "@/components/org/cardTeam"; 
 import { ArrowRight, Layers, Users } from "lucide-react";
 import Link from "next/link";
-import { Member } from "@/types/organization"
 
 export default function DivisiPage() {
   return (
@@ -86,7 +85,7 @@ export default function DivisiPage() {
               {/* Grid Anggota (Centered Grid - Sama seperti BPH) */}
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-center">
                 {dept.members.length > 0 ? (
-                  dept.members.map((m: Member) => (
+                  dept.members.map((m) => (
                     <TeamCard key={m.id} member={m} />
                   ))
                 ) : (
