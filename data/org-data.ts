@@ -41,8 +41,28 @@ export const coreBoard: Member[] = [
 export const departments: Division[] = [
   {
     id: "internal",
+    slug: "internal",
     name: "Departemen Internal",
     description: "Menjaga harmonisasi dan pengembangan SDM anggota.",
+    jobdesk:
+      "Bertanggung jawab atas manajemen internal organisasi, pengembangan anggota, serta menjaga komunikasi dan koordinasi antar divisi.",
+    programs: [
+      "Rapat Koordinasi Rutin",
+      "Evaluasi Kinerja Anggota",
+      "Pengelolaan Database Anggota",
+      "Kegiatan Penguatan Internal"
+    ],
+    skills: [
+      "Leadership",
+      "Manajemen Waktu",
+      "Team Management",
+      "Problem Solving"
+    ],
+    projects: [
+      "Sistem Monitoring Kehadiran",
+      "Dashboard Internal Management",
+      "Program Mentoring Anggota Baru"
+    ],
     members: [
       { id: "int1", name: "Aldo Tegar Laksana", role: "Koordinator", image: "/placeholder-user.jpg" },
       { id: "int2", name: "Mario Yudha Pratama", role: "Staff", image: "/placeholder-user.jpg" },
@@ -55,8 +75,28 @@ export const departments: Division[] = [
   },
   {
     id: "eksternal",
+    slug: "eksternal",
     name: "Departemen Eksternal",
-    description: "Menjalin hubungan dengan pihak luar dan branding.",
+    description: "Menjalin hubungan dengan pihak luar dan branding organisasi.",
+    jobdesk:
+      "Mengelola komunikasi eksternal, membangun relasi dengan mitra, serta mengembangkan citra dan branding organisasi.",
+    programs: [
+      "Kerja Sama Antar Organisasi",
+      "Media Partnership Event",
+      "Publikasi dan Branding Digital",
+      "Company Visit"
+    ],
+    skills: [
+      "Public Speaking",
+      "Negotiation",
+      "Branding Strategy",
+      "Networking"
+    ],
+    projects: [
+      "Website Company Profile",
+      "Campaign Media Sosial",
+      "Event Collaboration dengan Kampus Lain"
+    ],
     members: [
       { id: "eks1", name: "Irsal Fauzan Alfarizi", role: "Koordinator", image: "/placeholder-user.jpg" },
       { id: "eks2", name: "Muhammad Alfito Rizky Maulana", role: "Staff", image: "/placeholder-user.jpg" },
@@ -68,8 +108,28 @@ export const departments: Division[] = [
   },
   {
     id: "minatbakat",
+    slug: "minat-bakat",
     name: "Minat & Bakat",
-    description: "Mewadahi potensi non-akademik dan akademik.",
+    description: "Mewadahi potensi akademik dan non-akademik anggota.",
+    jobdesk:
+      "Mengembangkan potensi anggota dalam bidang akademik dan non-akademik melalui program pelatihan, kompetisi, dan pengembangan komunitas.",
+    programs: [
+      "Pelatihan Programming",
+      "Workshop UI/UX",
+      "Turnamen E-Sport",
+      "Kompetisi Internal Hive"
+    ],
+    skills: [
+      "Programming",
+      "UI/UX Design",
+      "Creative Thinking",
+      "Competitive Mindset"
+    ],
+    projects: [
+      "Aplikasi Internal Hive",
+      "Design System Organisasi",
+      "Tim Kompetisi Hackathon"
+    ],
     members: [
       { id: "min1", name: "Muhamad Fajar Ramadlan", role: "Koordinator", image: "/placeholder-user.jpg" },
       { id: "min2", name: "Jumiati", role: "Staff", image: "/placeholder-user.jpg" },

@@ -14,7 +14,15 @@ export type Member = {
 
 export type Division = {
   id: string;
+  slug: string; // untuk dynamic route
   name: string;
   description: string;
-  members: Member[]; // Array of Member
+
+  // 🔥 Tambahan untuk detail page
+  jobdesk: string;
+  programs: string[];
+  skills: string[];
+  projects: string[];
+
+  members: Member[];
 };
