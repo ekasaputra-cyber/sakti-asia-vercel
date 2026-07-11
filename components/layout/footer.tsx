@@ -25,7 +25,7 @@ export default function Footer() {
                <span>SAK<span className="text-yellow-500">TI</span></span>
             </div>
             <p className="text-sm leading-relaxed max-w-sm text-slate-500">
-              Sindikat Akademik Teknik Informatika. Wadah kolaborasi mahasiswa TI untuk mengembangkan hard skill, soft skill, dan jejaring profesional di era digital.
+              Sindikat Akademi Teknik Informatika. Wadah kolaborasi mahasiswa TI untuk mengembangkan hard skill, soft skill, dan jejaring profesional di era digital.
             </p>
             <div className="flex gap-4 pt-2">
               <SocialIcon icon={Instagram} href="#" />
@@ -54,9 +54,9 @@ export default function Footer() {
               <li className="flex gap-3 items-start">
                 <MapPin className="h-5 w-5 text-yellow-500 shrink-0 mt-0.5" />
                 <span>
-                  Gedung Fakultas Ilmu Komputer<br />
-                  Lantai 2, Ruang Ormawa<br />
-                  Universitas Teknologi Asia
+                  Jl. Soekarno Hatta, Rembuksari No. 1A
+                  <br />
+                  Mojolangu, Lowokwaru, Kota Malang 65113
                 </span>
               </li>
               <li className="flex gap-3 items-center">

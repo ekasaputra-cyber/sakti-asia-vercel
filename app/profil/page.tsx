@@ -36,12 +36,6 @@ export default function ProfilPage() {
             Lebih dari sekadar organisasi, kami adalah inkubator pergerakan
             mahasiswa IT yang menjunjung tinggi solidaritas dan inovasi.
           </p>
-          <div className="mt-8">
-            <Button className="bg-yellow-500 text-black hover:bg-yellow-400 font-bold">
-              <Download className="mr-2 h-4 w-4" />
-              Download Company Profile
-            </Button>
-          </div>
         </div>
       </section>
 
@@ -79,7 +73,7 @@ export default function ProfilPage() {
               <div className="space-y-4 text-slate-400 leading-relaxed">
                 <p>
                   <strong className="text-yellow-500">
-                    SAKTI (Sindikat Akademik Teknik Informatika)
+                    SAKTI (Sindikat Akademi Teknik Informatika)
                   </strong>{" "}
                   didirikan pada tahun 2010 sebagai respons terhadap kebutuhan
                   mahasiswa akan wadah pengembangan diri di luar jam kuliah.

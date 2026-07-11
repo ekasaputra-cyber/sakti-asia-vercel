@@ -4,7 +4,7 @@ import { Member, Division } from "@/types/organization";
 export const leadershipData = {
   ketua: {
     id: "lead-1",
-    name: "Heru Pratama",
+    name: "Gilang Dwi Hermawan",
     role: "Ketua Umum",
     image: "/placeholder-user.jpg",
     visi: "Mewujudkan organisasi terbuka dan profesional sebagai ruang kolaborasi mahasiswa TI dalam Pengembangan akademik dan minat bakat",
@@ -17,13 +17,13 @@ export const leadershipData = {
   },
   wakil: { 
     id: "lead-2",
-    name: "Muhammad Nurfaiz Alfian Ikhsan", 
+    name: "Fika Aulia", 
     role: "Wakil Ketua", 
     image: "/placeholder-user.jpg" 
   },
   pembina: { 
     id: "lead-3",
-    name: "Dr. Suastika Yulia Riska", 
+    name: "Dr. Suastika Yulia Riska, S.Kom., M.Kom.", 
     role: "Pembina Organisasi", 
     image: "/placeholder-user.jpg" 
   }
@@ -31,10 +31,10 @@ export const leadershipData = {
 
 // 2. DATA BPH (Badan Pengurus Harian)
 export const coreBoard: Member[] = [
-  { id: "1", name: "Dian Kurnia Ramadhani", role: "Sekretaris I", image: "/placeholder-user.jpg" },
-  { id: "2", name: "Kinasih Putri Ramadhani", role: "Sekretaris II", image: "/placeholder-user.jpg" },
-  { id: "3", name: "Jaya", role: "Bendahara I", image: "/placeholder-user.jpg" },
-  { id: "4", name: "Wangi Suci Avrillya", role: "Bendahara II", image: "/placeholder-user.jpg" },
+  { id: "1", name: "Muhammad Fadel", role: "Sekretaris I", image: "/placeholder-user.jpg" },
+  { id: "2", name: "Nadhifah Irbah Hafizhah", role: "Sekretaris II", image: "/placeholder-user.jpg" },
+  { id: "3", name: "Wangi Suci Avrillya", role: "Bendahara I", image: "/placeholder-user.jpg" },
+  { id: "4", name: "Lailatul Putri Wijayanti", role: "Bendahara II", image: "/placeholder-user.jpg" },
 ];
 
 // 3. DATA DEPARTEMEN
@@ -64,13 +64,10 @@ export const departments: Division[] = [
       "Program Mentoring Anggota Baru"
     ],
     members: [
-      { id: "int1", name: "Aldo Tegar Laksana", role: "Koordinator", image: "/placeholder-user.jpg" },
-      { id: "int2", name: "Mario Yudha Pratama", role: "Staff", image: "/placeholder-user.jpg" },
-      { id: "int3", name: "Ahmad Bagas Febriansyah Putra", role: "Staff", image: "/placeholder-user.jpg" },
-      { id: "int4", name: "Fika Aulia", role: "Staff", image: "/placeholder-user.jpg" },
-      { id: "int5", name: "Andrew Prastama Putra", role: "Staff", image: "/placeholder-user.jpg" },
-      { id: "int6", name: "Muhammad Fadel", role: "Staff", image: "/placeholder-user.jpg" },
-      { id: "int7", name: "Muhammad Emre Grimley", role: "Staff", image: "/placeholder-user.jpg" },
+      { id: "int1", name: "Emre Grimley", role: "Koordinator", image: "/placeholder-user.jpg" },
+      { id: "int2", name: "Gita Patricia Ramadhani", role: "Staff", image: "/placeholder-user.jpg" },
+      { id: "int3", name: "Farhan Ahmad Syah", role: "Staff", image: "/placeholder-user.jpg" },
+      { id: "int4", name: "Variza Allana Gazara Putra", role: "Staff", image: "/placeholder-user.jpg" },
     ]
   },
   {
@@ -98,12 +95,10 @@ export const departments: Division[] = [
       "Event Collaboration dengan Kampus Lain"
     ],
     members: [
-      { id: "eks1", name: "Irsal Fauzan Alfarizi", role: "Koordinator", image: "/placeholder-user.jpg" },
-      { id: "eks2", name: "Muhammad Alfito Rizky Maulana", role: "Staff", image: "/placeholder-user.jpg" },
-      { id: "eks3", name: "Gilang Dwi Hermawan", role: "Staff", image: "/placeholder-user.jpg" },
-      { id: "eks4", name: "Adnan Abiyan Amrullah", role: "Staff", image: "/placeholder-user.jpg" },
-      { id: "eks5", name: "Bayu Sahara A", role: "Staff", image: "/placeholder-user.jpg" },
-      { id: "eks6", name: "Revanya Julianti Arsa Pradana", role: "Staff", image: "/placeholder-user.jpg" },
+      { id: "eks1", name: "Adnan Abiyan Amrullah", role: "Koordinator", image: "/placeholder-user.jpg" },
+      { id: "eks2", name: "Revanya Julianti Arsa Pradana", role: "Staff", image: "/placeholder-user.jpg" },
+      { id: "eks3", name: "M. Syarif Hidayatulloh", role: "Staff", image: "/placeholder-user.jpg" },
+      { id: "eks4", name: "Adi Jaya Wibawa", role: "Staff", image: "/placeholder-user.jpg" },
     ]
   },
   {
@@ -131,11 +126,11 @@ export const departments: Division[] = [
       "Tim Kompetisi Hackathon"
     ],
     members: [
-      { id: "min1", name: "Muhamad Fajar Ramadlan", role: "Koordinator", image: "/placeholder-user.jpg" },
+      { id: "min1", name: "Nathanael Ivan Susanto", role: "Koordinator", image: "/placeholder-user.jpg" },
       { id: "min2", name: "Jumiati", role: "Staff", image: "/placeholder-user.jpg" },
       { id: "min3", name: "Dafit Fernandus Ferdi Hardiansyah", role: "Staff", image: "/placeholder-user.jpg" },
-      { id: "min4", name: "Nathanael Ivan Susanto", role: "Staff", image: "/placeholder-user.jpg" },
-      { id: "min5", name: "Andhika Fhatrichias Arbania", role: "Staff", image: "/placeholder-user.jpg" },
+      { id: "min4", name: "Kinasih Putri Ramadhani", role: "Staff", image: "/placeholder-user.jpg" },
+      { id: "min5", name: "Khoirudin", role: "Staff", image: "/placeholder-user.jpg" },
     ]
   }
 ];
@@ -146,4 +141,5 @@ export const demisioners: Member[] = [
   { id: "dem2", name: "Ahmad Farid Dwi Prayitno", role: "Ketua 2022", period: "2022-2023", image: "" },
   { id: "dem3", name: "Stevanus Dwi Rizki", role: "Ketua 2023", period: "2023-2024", image: "" },
   { id: "dem4", name: "Saiful Bahri", role: "Ketua 2024", period: "2024-2025", image: "" },
+  { id: "dem5", name: "Heru Pratama", role: "Ketua 2025", period: "2025-2026", image: "" },
 ];

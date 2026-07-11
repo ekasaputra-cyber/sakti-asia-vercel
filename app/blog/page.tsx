@@ -4,21 +4,21 @@ import Link from "next/link";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
 import {
   ArrowRight,
   Calendar,
   Clock,
   Search,
-  Hash,
   TrendingUp,
   Terminal,
   Cpu,
+  ChevronDown,
 } from "lucide-react";
 
 export default function BlogPage() {
   // DATA DUMMY BERITA (Nanti bisa dari Database/CMS)
   const featuredPost = {
+    slug: "quantum-computing-kriptografi",
     title:
       "Era Quantum Computing: Ancaman atau Peluang bagi Kriptografi Modern?",
     excerpt:
@@ -121,11 +121,15 @@ export default function BlogPage() {
   ];
   const [activeCategory, setActiveCategory] = useState("All");
   const [sortBy, setSortBy] = useState("latest");
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredPosts =
-    activeCategory === "All"
-      ? posts
-      : posts.filter((post) => post.category === activeCategory);
+  const filteredPosts = posts
+    .filter((post) =>
+      activeCategory === "All" ? true : post.category === activeCategory
+    )
+    .filter((post) =>
+      post.title.toLowerCase().includes(searchQuery.trim().toLowerCase())
+    );
 
   const sortedPosts = [...filteredPosts].sort((a, b) => {
     if (sortBy === "popular") {
@@ -167,6 +171,8 @@ export default function BlogPage() {
               <Search className="absolute left-3 h-5 w-5 text-slate-500" />
               <input
                 type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Cari topik (misal: React, AI, Skripsi)..."
                 className="w-full h-12 pl-10 pr-4 bg-slate-900 border border-slate-800 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 transition-all"
               />
@@ -183,50 +189,52 @@ export default function BlogPage() {
             <h2 className="text-xl font-bold text-white">Sedang Hangat</h2>
           </div>
 
-          <div className="relative rounded-2xl overflow-hidden border border-slate-800 bg-slate-900 group hover:border-yellow-500/50 transition-all cursor-pointer">
-            <div className="grid md:grid-cols-2">
-              {/* Image Placeholder */}
-              <div
-                className={`h-64 md:h-auto ${featuredPost.imageColor} relative flex items-center justify-center`}
-              >
-                <div className="absolute inset-0 bg-hive-pattern opacity-50"></div>
-                <Cpu className="h-24 w-24 text-white/20 group-hover:text-yellow-500/50 transition-colors duration-500" />
-                <div className="absolute top-4 left-4">
-                  <Badge className="bg-yellow-500 text-black hover:bg-yellow-400 font-bold">
-                    {featuredPost.category}
-                  </Badge>
-                </div>
-              </div>
-
-              {/* Content */}
-              <div className="p-8 md:p-12 flex flex-col justify-center">
-                <div className="flex items-center gap-3 text-sm text-slate-400 mb-4">
-                  <span className="flex items-center gap-1">
-                    <Calendar className="h-3 w-3" /> {featuredPost.date}
-                  </span>
-                  <span>•</span>
-                  <span className="flex items-center gap-1">
-                    <Clock className="h-3 w-3" /> {featuredPost.readTime}
-                  </span>
-                </div>
-                <h3 className="text-2xl md:text-4xl font-bold text-white mb-4 group-hover:text-yellow-400 transition-colors">
-                  {featuredPost.title}
-                </h3>
-                <p className="text-slate-400 leading-relaxed mb-6">
-                  {featuredPost.excerpt}
-                </p>
-                <div className="flex items-center gap-3">
-                  <div className="h-8 w-8 rounded-full bg-slate-800 flex items-center justify-center text-xs font-bold text-yellow-500 border border-slate-700">
-                    DR
+          <Link href={`/blog/${featuredPost.slug}`}>
+            <div className="relative rounded-2xl overflow-hidden border border-slate-800 bg-slate-900 group hover:border-yellow-500/50 transition-all cursor-pointer">
+              <div className="grid md:grid-cols-2">
+                {/* Image Placeholder */}
+                <div
+                  className={`h-64 md:h-auto ${featuredPost.imageColor} relative flex items-center justify-center`}
+                >
+                  <div className="absolute inset-0 bg-hive-pattern opacity-50"></div>
+                  <Cpu className="h-24 w-24 text-white/20 group-hover:text-yellow-500/50 transition-colors duration-500" />
+                  <div className="absolute top-4 left-4">
+                    <Badge className="bg-yellow-500 text-black hover:bg-yellow-400 font-bold">
+                      {featuredPost.category}
+                    </Badge>
                   </div>
-                  <span className="text-sm font-medium text-white">
-                    {featuredPost.author}
-                  </span>
-                  <ArrowRight className="ml-auto h-5 w-5 text-slate-500 group-hover:text-yellow-500 group-hover:translate-x-1 transition-all" />
+                </div>
+
+                {/* Content */}
+                <div className="p-8 md:p-12 flex flex-col justify-center">
+                  <div className="flex items-center gap-3 text-sm text-slate-400 mb-4">
+                    <span className="flex items-center gap-1">
+                      <Calendar className="h-3 w-3" /> {featuredPost.date}
+                    </span>
+                    <span>•</span>
+                    <span className="flex items-center gap-1">
+                      <Clock className="h-3 w-3" /> {featuredPost.readTime}
+                    </span>
+                  </div>
+                  <h3 className="text-2xl md:text-4xl font-bold text-white mb-4 group-hover:text-yellow-400 transition-colors">
+                    {featuredPost.title}
+                  </h3>
+                  <p className="text-slate-400 leading-relaxed mb-6">
+                    {featuredPost.excerpt}
+                  </p>
+                  <div className="flex items-center gap-3">
+                    <div className="h-8 w-8 rounded-full bg-slate-800 flex items-center justify-center text-xs font-bold text-yellow-500 border border-slate-700">
+                      DR
+                    </div>
+                    <span className="text-sm font-medium text-white">
+                      {featuredPost.author}
+                    </span>
+                    <ArrowRight className="ml-auto h-5 w-5 text-slate-500 group-hover:text-yellow-500 group-hover:translate-x-1 transition-all" />
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          </Link>
         </div>
       </section>
 
@@ -261,8 +269,16 @@ export default function BlogPage() {
           </div>
 
           {/* Grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {sortedPosts.map((post) => (
+          {sortedPosts.length === 0 ? (
+            <div className="text-center py-16 text-slate-500">
+              <p className="mb-1">
+                Nggak ada artikel yang cocok dengan &quot;{searchQuery}&quot;.
+              </p>
+              <p className="text-sm">Coba kata kunci lain, ya.</p>
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {sortedPosts.map((post) => (
               <Link key={post.slug} href={`/blog/${post.slug}`}>
                 <div className="group flex flex-col h-full bg-slate-900/50 border border-slate-800 rounded-xl overflow-hidden hover:border-yellow-500/50 hover:bg-slate-900 transition-all duration-300 cursor-pointer">
                   {/* Card Header (Icon as Image) */}
@@ -305,16 +321,18 @@ export default function BlogPage() {
                   </div>
                 </div>
               </Link>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
 
           <div className="mt-12 text-center">
             <Button
               variant="outline"
               size="lg"
-              className="border-slate-800 text-black bg-yellow-500 hover:text-white hover:border-yellow-500 hover:bg-slate-900"
+              className="group !border-yellow-500/40 !bg-yellow-500 !text-black hover:!bg-slate-900 hover:!text-white hover:!border-yellow-500 font-bold px-8 transition-colors"
             >
               Muat Lebih Banyak Artikel
+              <ChevronDown className="h-4 w-4 transition-transform group-hover:translate-y-0.5" />
             </Button>
           </div>
         </div>

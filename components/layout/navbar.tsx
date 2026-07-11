@@ -21,7 +21,8 @@ import {
   Github, 
   Instagram, 
   Linkedin,
-  ChevronRight
+  ChevronRight,
+  Mail
 } from "lucide-react";
 
 export default function Navbar() {
@@ -32,6 +33,7 @@ export default function Navbar() {
     { name: "Profil", href: "/profil", icon: User },
     { name: "Divisi", href: "/divisi", icon: Layers },
     { name: "Blog", href: "/blog", icon: FileText },
+    { name: "Contact", href: "/contact", icon: Mail },
   ];
 
   return (

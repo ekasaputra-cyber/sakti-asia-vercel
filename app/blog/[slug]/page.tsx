@@ -3,6 +3,35 @@ import { notFound } from "next/navigation";
 
 const posts = [
   {
+    slug: "quantum-computing-kriptografi",
+    title:
+      "Era Quantum Computing: Ancaman atau Peluang bagi Kriptografi Modern?",
+    category: "Cyber Security",
+    date: "2026-01-31",
+    readTime: "7 min read",
+    views: 2100,
+    author: "Divisi Riset Keamanan Siber",
+    content: `
+Komputer kuantum berkembang pesat, dan salah satu dampak terbesarnya ada di dunia keamanan siber: kemampuannya memecahkan algoritma enkripsi yang selama ini dianggap aman, seperti RSA dan ECC.
+
+Kenapa ini jadi ancaman?
+- Algoritma Shor (jalan di komputer kuantum) bisa memfaktorkan bilangan besar jauh lebih cepat dari komputer biasa
+- RSA dan ECC mengandalkan kesulitan memfaktorkan bilangan besar — begitu itu jadi gampang, enkripsinya jebol
+
+Tapi ini juga peluang:
+- Lahirnya bidang baru: Post-Quantum Cryptography (PQC), algoritma enkripsi yang dirancang tahan terhadap serangan komputer kuantum
+- NIST sudah mulai menstandarkan beberapa algoritma PQC (seperti CRYSTALS-Kyber)
+- Kebutuhan SDM yang paham kriptografi kuantum akan terus naik
+
+Apa yang bisa mahasiswa TI lakukan mulai sekarang?
+1. Pelajari dasar-dasar kriptografi klasik (RSA, ECC, AES) dulu sampai benar-benar paham
+2. Ikuti perkembangan standar PQC dari NIST
+3. Coba eksplorasi library PQC yang sudah open-source untuk latihan implementasi
+
+Post-quantum cryptography bukan sesuatu yang akan tiba-tiba dibutuhkan besok, tapi transisinya butuh waktu bertahun-tahun — jadi lebih baik mulai belajar dari sekarang daripada kaget nanti.
+    `,
+  },
+  {
     slug: "rust-memory-safety",
     title: "Mengapa Rust Jadi Bahasa Favorit untuk System Programming?",
     category: "Web Dev",
@@ -132,7 +161,7 @@ export default async function BlogDetail({
     notFound();
   }
 
-  const currentUrl = `/blog/${post.slug}`;
+  const currentUrl = `https://www.saktiasia.web.id/blog/${post.slug}`;
 
   return (
     <div className="min-h-screen bg-slate-950 text-white">
@@ -146,7 +175,7 @@ export default async function BlogDetail({
             ← Kembali ke Blog
           </Link>
 
-          <span className="text-xs text-slate-500">Blog HIMTI</span>
+          <span className="text-xs text-slate-500">Blog SAKTI</span>
         </div>
 
         <div className="mb-2">
