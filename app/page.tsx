@@ -196,12 +196,14 @@ export default function Home() {
               keras, dan menghasilkan karya manis untuk masa depan.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 w-full justify-center pt-4">
-              <Button
-                size="lg"
-                className="h-12 px-8 text-base bg-yellow-500 hover:bg-yellow-400 text-black shadow-[0_0_20px_-5px_rgba(234,179,8,0.4)] transition-all hover:scale-105 font-bold border-none"
-              >
-                Gabung Sekarang <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
+              <Link href="/pendaftaran">
+                <Button
+                  size="lg"
+                  className="h-12 px-8 text-base bg-yellow-500 hover:bg-yellow-400 text-black shadow-[0_0_20px_-5px_rgba(234,179,8,0.4)] transition-all hover:scale-105 font-bold border-none"
+                >
+                  Gabung Sekarang <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
               <Link href="/divisi">
                 <Button
                   variant="outline"
@@ -330,7 +332,7 @@ export default function Home() {
               <DialogTrigger asChild>
                 <Button
                   variant="outline"
-                  className="shrink-0 border-yellow-500/30 text-yellow-500 hover:bg-yellow-500 hover:text-black"
+                  className="shrink-0 text-yellow-500 hover:bg-yellow-500 hover:text-black"
                 >
                   Lihat Kalender Lengkap <Calendar className="ml-2 h-4 w-4" />
                 </Button>
@@ -589,26 +591,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      {/* --- SECTION: OPEN RECRUITMENT CTA --- */}
-      {/* <section className="py-20 bg-black text-center">
-        <div className="container px-6 md:px-12 lg:px-24">
-          <h2 className="text-4xl font-bold text-white mb-4">
-            Siap Jadi Bagian dari Hive?
-          </h2>
-          <p className="text-slate-400 mb-8">
-            Jangan cuma jadi penonton. Bangun karier, relasi, dan prestasi
-            bersama SAKTI.
-          </p>
-
-          <Button
-            size="lg"
-            className="bg-yellow-500 hover:bg-yellow-400 text-black font-bold px-10"
-          >
-            Daftar Open Recruitment 🚀
-          </Button>
-        </div>
-      </section> */}
 
 {/* --- SECTION: PUNYA PERTANYAAN? --- */}
 <section className="py-20 bg-black text-center border-t border-slate-900">

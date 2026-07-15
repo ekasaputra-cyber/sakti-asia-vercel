@@ -82,10 +82,12 @@ export default function Navbar() {
 
         {/* RIGHT AREA */}
         <div className="flex gap-3 items-center">
-          {/* Tombol Join: Kuning Neon */}
-          <Button size="sm" className="hidden md:flex font-bold bg-yellow-500 text-black hover:bg-yellow-400 shadow-[0_0_15px_-3px_rgba(234,179,8,0.6)] border-none transition-all">
-            Join Kami
-          </Button>
+          {/* RIGHT AREA — Tombol Join desktop */}
+          <Link href="/pendaftaran">
+            <Button size="sm" className="hidden md:flex font-bold bg-yellow-500 text-black hover:bg-yellow-400 shadow-[0_0_15px_-3px_rgba(234,179,8,0.6)] border-none transition-all">
+              Join Kami
+            </Button>
+          </Link>
 
           {/* MOBILE MENU TRIGGER */}
           <div className="md:hidden">
@@ -106,7 +108,7 @@ export default function Navbar() {
                     <SheetTitle className="text-xl font-bold text-white">SAKTI</SheetTitle>
                   </div>
                   <SheetDescription className="text-slate-400">
-                    Sindikat Akademik Teknik Informatika
+                    Sindikat Akademi Teknik Informatika
                   </SheetDescription>
                 </SheetHeader>
 
@@ -141,9 +143,11 @@ export default function Navbar() {
 
                 {/* Footer Menu Mobile */}
                 <div className="mt-auto">
-                  <Button className="w-full mb-6 font-bold bg-yellow-500 text-black hover:bg-yellow-400" size="lg">
-                    Join Member Sekarang
-                  </Button>
+                  <Link href="/pendaftaran">
+                    <Button className="w-full mb-6 font-bold bg-yellow-500 text-black hover:bg-yellow-400" size="lg">
+                      Join Member Sekarang
+                    </Button>
+                  </Link>
                   
                   <div className="flex justify-center gap-6 pb-4 border-t border-slate-800 pt-6">
                     <Link href="#" className="text-slate-500 hover:text-white transition-colors hover:scale-110">

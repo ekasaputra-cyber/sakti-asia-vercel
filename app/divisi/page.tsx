@@ -203,7 +203,7 @@ export default function DivisiPage() {
             Kami selalu mencari talenta baru yang memiliki semangat belajar
             tinggi.
           </p>
-          <Link href="#">
+          <Link href="/pendaftaran">
             <Button
               size="lg"
               className="bg-yellow-500 text-black hover:bg-yellow-400 font-bold px-8 shadow-lg shadow-yellow-500/20"
