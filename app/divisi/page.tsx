@@ -194,7 +194,7 @@ export default function DivisiPage() {
       </section>
 
       {/* --- CTA SECTION --- */}
-      <section className="py-20 bg-linear-to-t from-yellow-900/10 to-black border-t border-slate-900">
+      {/* <section className="py-20 bg-linear-to-t from-yellow-900/10 to-black border-t border-slate-900">
         <div className="container px-4 text-center">
           <h2 className="text-3xl font-bold text-white mb-4">
             Siap Menjadi Bagian dari Hive?
@@ -212,7 +212,7 @@ export default function DivisiPage() {
             </Button>
           </Link>
         </div>
-      </section>
+      </section> */}
     </div>
   );
 }

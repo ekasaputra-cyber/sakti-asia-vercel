@@ -16,6 +16,8 @@ const MAPS_QUERY = "-7.937973,112.6266227";
 export default function ContactPage() {
   const [form, setForm] = useState({ name: "", email: "", message: "" });
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   function handleChange(
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -24,14 +26,32 @@ export default function ContactPage() {
     setForm((prev) => ({ ...prev, [name]: value }));
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    setError(null);
+    setSubmitting(true);
 
-    // TODO: Hubungkan ke backend/API route di sini setelah diputuskan
-    // (misal: kirim ke email organisasi, simpan ke database, atau Google Sheet)
-    console.log("Form contact (belum terhubung backend):", form);
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
 
-    setSubmitted(true);
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Gagal mengirim pesan");
+      }
+
+      setSubmitted(true);
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "Terjadi kesalahan, coba lagi"
+      );
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -110,11 +130,11 @@ export default function ContactPage() {
                 <div className="flex flex-col items-center text-center py-8">
                   <CheckCircle2 className="h-12 w-12 text-yellow-500 mb-4" />
                   <h2 className="text-xl font-bold mb-2">
-                    Pesan Terkirim (Contoh)
+                    Pesan Terkirim
                   </h2>
                   <p className="text-slate-400 mb-6">
-                    Ini masih tampilan contoh — pengiriman pesan sungguhan
-                    belum aktif.
+                    Terima kasih! Pesan kamu sudah kami terima dan akan
+                    segera kami balas.
                   </p>
                   <Button
                     variant="outline"
@@ -187,12 +207,19 @@ export default function ContactPage() {
                     />
                   </div>
 
+                  {error && (
+                    <p className="text-sm text-red-500 bg-red-500/10 border border-red-500/30 rounded-md px-3 py-2">
+                      {error}
+                    </p>
+                  )}
+
                   <Button
                     type="submit"
-                    className="w-full bg-yellow-500 hover:bg-yellow-400 text-black font-bold h-11"
+                    disabled={submitting}
+                    className="w-full bg-yellow-500 hover:bg-yellow-400 text-black font-bold h-11 disabled:opacity-60"
                   >
-                    Kirim Pesan
-                    <Send className="ml-2 h-4 w-4" />
+                    {submitting ? "Mengirim..." : "Kirim Pesan"}
+                    {!submitting && <Send className="ml-2 h-4 w-4" />}
                   </Button>
                 </form>
               )}

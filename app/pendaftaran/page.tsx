@@ -28,6 +28,8 @@ type FileState = {
     sertifikatOspro: File | null;
 };
 
+type FileFieldName = keyof FileState;
+
 const INITIAL_FORM: FormState = {
     nama: "",
     ttl: "",
@@ -43,10 +45,19 @@ const INITIAL_FILES: FileState = {
     sertifikatOspro: null,
 };
 
+const MAX_FILE_SIZE_BYTES = 2 * 1024 * 1024; // 2MB, samakan dengan batas di API
+
 export default function PendaftaranPage() {
     const [form, setForm] = useState<FormState>(INITIAL_FORM);
     const [files, setFiles] = useState<FileState>(INITIAL_FILES);
+    const [fileErrors, setFileErrors] = useState<Record<FileFieldName, string | null>>({
+        fotoKtm: null,
+        cv: null,
+        sertifikatOspro: null,
+    });
     const [submitted, setSubmitted] = useState(false);
+    const [submitting, setSubmitting] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
     function handleChange(
         e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -57,17 +68,67 @@ export default function PendaftaranPage() {
 
     function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
         const { name, files: fileList } = e.target;
-        setFiles((prev) => ({ ...prev, [name]: fileList?.[0] ?? null }));
+        const fieldName = name as FileFieldName;
+        const selectedFile = fileList?.[0] ?? null;
+
+        if (selectedFile && selectedFile.size > MAX_FILE_SIZE_BYTES) {
+            const sizeMb = (selectedFile.size / (1024 * 1024)).toFixed(1);
+            setFileErrors((prev) => ({
+                ...prev,
+                [fieldName]: `Ukuran file ${sizeMb}MB melebihi batas 2MB. Pilih file lain.`,
+            }));
+            setFiles((prev) => ({ ...prev, [fieldName]: null }));
+            e.target.value = ""; // reset input biar nggak nyangkut file yang ditolak
+            return;
+        }
+
+        setFileErrors((prev) => ({ ...prev, [fieldName]: null }));
+        setFiles((prev) => ({ ...prev, [fieldName]: selectedFile }));
     }
 
-    function handleSubmit(e: React.FormEvent) {
+    async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
+        setError(null);
 
-        // TODO: Hubungkan ke backend/API route setelah backend jadi
-        // (rencana: submission masuk ke Google Sheets / storage pendaftaran)
-        console.log("Form pendaftaran (belum terhubung backend):", form, files);
+        if (!files.fotoKtm || !files.cv || !files.sertifikatOspro) {
+            setError("Semua berkas lampiran wajib diupload");
+            return;
+        }
 
-        setSubmitted(true);
+        setSubmitting(true);
+
+
+        try {
+            const payload = new FormData();
+            payload.append("nama", form.nama);
+            payload.append("ttl", form.ttl);
+            payload.append("nim", form.nim);
+            payload.append("email", form.email);
+            payload.append("whatsapp", form.whatsapp);
+            payload.append("motivasi", form.motivasi);
+            payload.append("fotoKtm", files.fotoKtm);
+            payload.append("cv", files.cv);
+            payload.append("sertifikatOspro", files.sertifikatOspro);
+
+            const res = await fetch("/api/pendaftaran", {
+                method: "POST",
+                body: payload,
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                throw new Error(data.error || "Gagal mengirim pendaftaran");
+            }
+
+            setSubmitted(true);
+        } catch (err) {
+            setError(
+                err instanceof Error ? err.message : "Terjadi kesalahan, coba lagi"
+            );
+        } finally {
+            setSubmitting(false);
+        }
     }
 
     return (
@@ -115,11 +176,11 @@ export default function PendaftaranPage() {
                                 <div className="flex flex-col items-center text-center py-8">
                                     <CheckCircle2 className="h-12 w-12 text-yellow-500 mb-4" />
                                     <h2 className="text-xl font-bold mb-2">
-                                        Pendaftaran Terkirim (Contoh)
+                                        Pendaftaran Terkirim
                                     </h2>
                                     <p className="text-slate-400 mb-6">
-                                        Ini masih tampilan contoh — data belum benar-benar
-                                        tersimpan karena backend belum aktif.
+                                        Terima kasih sudah mendaftar! Tim kami akan
+                                        menghubungi kamu untuk proses selanjutnya.
                                     </p>
                                     <Button
                                         variant="outline"
@@ -127,6 +188,7 @@ export default function PendaftaranPage() {
                                         onClick={() => {
                                             setForm(INITIAL_FORM);
                                             setFiles(INITIAL_FILES);
+                                            setFileErrors({ fotoKtm: null, cv: null, sertifikatOspro: null });
                                             setSubmitted(false);
                                         }}
                                     >
@@ -266,6 +328,11 @@ export default function PendaftaranPage() {
                                                 <p className="text-xs text-slate-500">
                                                     Format JPG/PNG, maks. 2MB.
                                                 </p>
+                                                {fileErrors.fotoKtm && (
+                                                    <p className="text-xs text-red-500">
+                                                        {fileErrors.fotoKtm}
+                                                    </p>
+                                                )}
                                             </div>
 
                                             {/* CV */}
@@ -288,6 +355,11 @@ export default function PendaftaranPage() {
                                                 <p className="text-xs text-slate-500">
                                                     Format PDF/PNG maks. 2MB.
                                                 </p>
+                                                {fileErrors.cv && (
+                                                    <p className="text-xs text-red-500">
+                                                        {fileErrors.cv}
+                                                    </p>
+                                                )}
                                             </div>
 
                                             {/* Sertifikat Ospro */}
@@ -310,6 +382,11 @@ export default function PendaftaranPage() {
                                                 <p className="text-xs text-slate-500">
                                                     Format PDF/JPG/PNG, maks. 2MB.
                                                 </p>
+                                                {fileErrors.sertifikatOspro && (
+                                                    <p className="text-xs text-red-500">
+                                                        {fileErrors.sertifikatOspro}
+                                                    </p>
+                                                )}
                                             </div>
                                         </div>
                                     </div>
@@ -334,12 +411,19 @@ export default function PendaftaranPage() {
                                         />
                                     </div>
 
+                                    {error && (
+                                        <p className="text-sm text-red-500 bg-red-500/10 border border-red-500/30 rounded-md px-3 py-2">
+                                            {error}
+                                        </p>
+                                    )}
+
                                     <Button
                                         type="submit"
-                                        className="w-full bg-yellow-500 hover:bg-yellow-400 text-black font-bold h-11"
+                                        disabled={submitting}
+                                        className="w-full bg-yellow-500 hover:bg-yellow-400 text-black font-bold h-11 disabled:opacity-60"
                                     >
-                                        Kirim Pendaftaran
-                                        <Send className="ml-2 h-4 w-4" />
+                                        {submitting ? "Mengirim..." : "Kirim Pendaftaran"}
+                                        {!submitting && <Send className="ml-2 h-4 w-4" />}
                                     </Button>
                                 </form>
                             )}

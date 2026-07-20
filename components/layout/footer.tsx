@@ -43,7 +43,7 @@ export default function Footer() {
               <li><Link href="/profil" className="hover:text-yellow-500 transition-colors">Tentang Kami</Link></li>
               <li><Link href="/divisi" className="hover:text-yellow-500 transition-colors">Divisi & Proker</Link></li>
               <li><Link href="/blog" className="hover:text-yellow-500 transition-colors">Blog & Berita</Link></li>
-              <li><Link href="#" className="hover:text-yellow-500 transition-colors">Open Recruitment</Link></li>
+              <li><Link href="/pendaftaran" className="hover:text-yellow-500 transition-colors">Open Recruitment</Link></li>
             </ul>
           </div>
 
