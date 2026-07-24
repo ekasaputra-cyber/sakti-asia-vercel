@@ -1,19 +1,17 @@
-"use client";
-
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
-import { demisioners } from "@/data/org-data";
+import { getDemissioners } from "@/lib/api";
 import {
   Crown,
   Info,
   History,
   ShieldCheck,
   Hexagon,
-  Download,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
-export default function ProfilPage() {
+export default async function ProfilPage() {
+  const demisioners = await getDemissioners();
+
   return (
     <div className="flex flex-col min-h-screen bg-slate-950 text-white">
       {/* --- HEADER SECTION --- */}
@@ -61,8 +59,8 @@ export default function ProfilPage() {
                   The Cyber Hive
                 </h3>
                 <p className="text-sm text-slate-400 italic">
-                  "Seperti lebah, kami bekerja keras, terorganisir, dan
-                  menghasilkan 'madu' (karya) yang bermanfaat bagi sekitar."
+                  &quot;Seperti lebah, kami bekerja keras, terorganisir, dan
+                  menghasilkan &apos;madu&apos; (karya) yang bermanfaat bagi sekitar.&quot;
                 </p>
               </div>
             </div>
@@ -155,8 +153,8 @@ export default function ProfilPage() {
                       </div>
 
                       <p className="text-slate-400 text-sm mt-3">
-                        "Masa bakti {dem.period}. Membawa SAKTI menuju era
-                        digitalisasi modern."
+                        &quot;Masa bakti {dem.period}. Membawa SAKTI menuju era
+                        digitalisasi modern.&quot;
                       </p>
                     </div>
                   </div>
@@ -166,32 +164,6 @@ export default function ProfilPage() {
           </div>
         </div>
       </section>
-      {/* --- STATISTIK ORGANISASI --- */}
-      {/* <section className="py-16 bg-black border-b border-slate-900">
-  <div className="container px-4 md:px-6 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-
-    <div>
-      <h3 className="text-3xl font-bold text-yellow-500">500+</h3>
-      <p className="text-slate-400 text-sm mt-1">Alumni</p>
-    </div>
-
-    <div>
-      <h3 className="text-3xl font-bold text-yellow-500">30+</h3>
-      <p className="text-slate-400 text-sm mt-1">Event Diselenggarakan</p>
-    </div>
-
-    <div>
-      <h3 className="text-3xl font-bold text-yellow-500">6</h3>
-      <p className="text-slate-400 text-sm mt-1">Divisi Aktif</p>
-    </div>
-
-    <div>
-      <h3 className="text-3xl font-bold text-yellow-500">1000+</h3>
-      <p className="text-slate-400 text-sm mt-1">Peserta Kegiatan</p>
-    </div>
-
-  </div>
-</section> */}
     </div>
   );
 }

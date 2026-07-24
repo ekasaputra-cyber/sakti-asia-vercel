@@ -4,11 +4,11 @@ export type SocialLink = {
 };
 
 export type Member = {
-  id: string;
+  id: string | number;
   name: string;
   role: string;
-  image: string; // Path ke public folder, misal '/team/ketua.jpg'
-  period?: string; // Khusus demisioner
+  image: string | null;
+  period?: string;
   socials?: SocialLink[];
 };
 

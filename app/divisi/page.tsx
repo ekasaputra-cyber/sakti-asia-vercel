@@ -1,11 +1,18 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { leadershipData, coreBoard, departments } from "@/data/org-data";
+import { getLeadership, getBoard, getDepartments } from "@/lib/api";
 import TeamCard from "@/components/org/cardTeam";
-import { ArrowRight, Layers, Users } from "lucide-react";
+import { Layers, Users } from "lucide-react";
 import Link from "next/link";
 
-export default function DivisiPage() {
+export default async function DivisiPage() {
+  const leadership = await getLeadership();
+  const coreBoard = await getBoard();
+  const departments = await getDepartments();
+
+  const ketua = leadership.find((l) => l.role === "Ketua Umum");
+  const wakil = leadership.find((l) => l.role === "Wakil Ketua");
+
   return (
     <div className="flex flex-col min-h-screen bg-slate-950 text-white">
       {/* --- HEADER SECTION --- */}
@@ -34,7 +41,6 @@ export default function DivisiPage() {
       {/* --- SECTION 1: HIGH COMMAND (BPH) --- */}
       <section className="py-16 bg-slate">
         <div className="container px-4 md:px-6">
-          {/* Judul Section */}
           <div className="text-center mb-12">
             <h2 className="text-2xl font-bold text-white inline-block border-b-2 border-yellow-500 pb-1">
               High Command (BPH)
@@ -42,23 +48,21 @@ export default function DivisiPage() {
           </div>
 
           <div className="flex flex-col gap-12">
-            {/* Tier 1: Ketua & Wakil */}
             <div className="flex flex-col md:flex-row justify-center gap-8">
               <div className="w-full md:w-1/3 max-w-sm mx-auto">
                 <div className="text-center mb-3 text-xs text-yellow-500 font-bold uppercase tracking-widest bg-yellow-500/10 py-1 rounded-full">
                   Ketua Umum
                 </div>
-                <TeamCard member={leadershipData.ketua} />
+                {ketua && <TeamCard member={ketua} />}
               </div>
               <div className="w-full md:w-1/3 max-w-sm mx-auto">
                 <div className="text-center mb-3 text-xs text-slate-500 font-bold uppercase tracking-widest bg-slate-900 py-1 rounded-full">
                   Wakil Ketua
                 </div>
-                <TeamCard member={leadershipData.wakil} />
+                {wakil && <TeamCard member={wakil} />}
               </div>
             </div>
 
-            {/* Tier 2: Sekretaris & Bendahara */}
             <div>
               <div className="text-center mb-6 text-sm text-slate-500 font-bold uppercase tracking-widest">
                 Sekretaris & Bendahara
@@ -93,7 +97,6 @@ export default function DivisiPage() {
             />
           </div>
 
-          {/* 🔥 FILTER DEPARTEMEN SEKARANG DI SINI */}
           <div className="flex flex-wrap justify-center gap-3 mt-6">
             {departments.map((dept) => (
               <a
@@ -108,29 +111,15 @@ export default function DivisiPage() {
         </div>
       </section>
 
-      {/* --- SECTION 2: DEPARTEMEN LIST (Updated Style) --- */}
+      {/* --- SECTION 2: DEPARTEMEN LIST --- */}
       <section className="py-12 bg-slate-950">
         <div className="container px-4 md:px-6 space-y-16">
-          {/* --- QUICK NAVIGATION --- */}
-          {/* <div className="flex flex-wrap justify-center gap-3 mb-10">
-            {departments.map((dept) => (
-              <a
-                key={dept.id}
-                href={`#dept-${dept.id}`}
-                className="px-4 py-2 bg-black border border-slate-800 rounded-full text-sm text-slate-400 hover:text-yellow-500 hover:border-yellow-500 transition"
-              >
-                {dept.name}
-              </a>
-            ))}
-          </div> */}
-
           {departments.map((dept) => (
             <div
               key={dept.id}
               id={`dept-${dept.id}`}
               className="relative scroll-mt-24"
             >
-              {/* Header Departemen (Centered) */}
               <div className="flex flex-col items-center text-center mb-10 max-w-3xl mx-auto">
                 <div className="h-12 w-12 bg-slate-900 rounded-xl border border-slate-800 flex items-center justify-center text-yellow-500 mb-4 shadow-[0_0_20px_-5px_rgba(234,179,8,0.2)]">
                   <Users className="h-6 w-6" />
@@ -149,8 +138,6 @@ export default function DivisiPage() {
                   >
                     {dept.name}
                   </h3>
-
-                  {/* Underline glowing */}
                   <div className="h-[2px] w-0 bg-yellow-500 mx-auto transition-all duration-500 group-hover:w-24"></div>
                 </Link>
                 <div className="text-sm text-yellow-500 mb-2">
@@ -160,12 +147,10 @@ export default function DivisiPage() {
                 <div className="h-1 w-20 bg-linear-to-r from-transparent via-slate-800 to-transparent mt-6"></div>
               </div>
 
-              {/* Grid Anggota (Centered Grid - Sama seperti BPH) */}
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-center">
                 {dept.members.length > 0 ? (
                   dept.members.map((m) => <TeamCard key={m.id} member={m} />)
                 ) : (
-                  // Tampilan Kosong (Open Recruitment)
                   <div className="col-span-full flex justify-center">
                     <div className="w-full max-w-md py-10 border border-dashed border-slate-800 rounded-xl bg-slate-900/20 flex flex-col items-center justify-center text-center hover:border-yellow-500/30 transition-colors">
                       <div className="h-10 w-10 bg-slate-800 rounded-full flex items-center justify-center mb-3">
@@ -192,27 +177,6 @@ export default function DivisiPage() {
           ))}
         </div>
       </section>
-
-      {/* --- CTA SECTION --- */}
-      {/* <section className="py-20 bg-linear-to-t from-yellow-900/10 to-black border-t border-slate-900">
-        <div className="container px-4 text-center">
-          <h2 className="text-3xl font-bold text-white mb-4">
-            Siap Menjadi Bagian dari Hive?
-          </h2>
-          <p className="text-slate-400 max-w-xl mx-auto mb-8">
-            Kami selalu mencari talenta baru yang memiliki semangat belajar
-            tinggi.
-          </p>
-          <Link href="/pendaftaran">
-            <Button
-              size="lg"
-              className="bg-yellow-500 text-black hover:bg-yellow-400 font-bold px-8 shadow-lg shadow-yellow-500/20"
-            >
-              Daftar Sekarang <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-          </Link>
-        </div>
-      </section> */}
     </div>
   );
 }

@@ -22,7 +22,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
-import { leadershipData } from "@/data/org-data";
+import { getLeadership, Leader } from "@/lib/api";
 import TeamCard from "@/components/org/cardTeam";
 import { useEffect, useState } from "react";
 
@@ -63,6 +63,16 @@ function AnimatedCounter({
 }
 
 export default function Home() {
+  const [pembina, setPembina] = useState<Leader | null>(null);
+  const [ketua, setKetua] = useState<Leader | null>(null);
+
+  useEffect(() => {
+  getLeadership().then((data) => {
+    setPembina(data.find((l) => l.position_key === "pembina") ?? null);
+    setKetua(data.find((l) => l.position_key === "ketua_umum") ?? null);
+  });
+}, []);
+
   // DATA AGENDA
   const prokers = [
     {
@@ -192,7 +202,7 @@ export default function Home() {
               </span>
             </h1>
             <p className="mx-auto max-w-175 text-slate-400 md:text-xl leading-relaxed">
-              Wadah kolaborasi "Sarang Lebah" mahasiswa TI. Bersatu, bekerja
+              Wadah kolaborasi &quot;Sarang Lebah&quot; mahasiswa TI. Bersatu, bekerja
               keras, dan menghasilkan karya manis untuk masa depan.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 w-full justify-center pt-4">
@@ -258,10 +268,10 @@ export default function Home() {
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-4 text-center">
-                <TeamCard member={leadershipData.pembina} />
+                {pembina && <TeamCard member={pembina} />}
               </div>
               <div className="space-y-4 text-center mt-12">
-                <TeamCard member={leadershipData.ketua} />
+                {ketua && <TeamCard member={ketua} />}
               </div>
             </div>
             <div className="space-y-6">
@@ -281,7 +291,7 @@ export default function Home() {
                     Visi Ketua
                   </h3>
                   <p className="text-slate-300 italic">
-                    "{leadershipData.ketua.visi}"
+                    &quot;{ketua?.visi}&quot;
                   </p>
                 </div>
                 <div>
@@ -289,7 +299,7 @@ export default function Home() {
                     Misi Utama
                   </h3>
                   <ul className="space-y-3">
-                    {leadershipData.ketua.misi.map((item, index) => (
+                    {ketua?.misi?.map((item, index) => (
                       <li
                         key={index}
                         className="flex gap-3 text-slate-300 items-start group"
@@ -527,7 +537,7 @@ export default function Home() {
                 key={i}
                 className="bg-slate-900 p-6 rounded-xl border border-slate-800 hover:border-yellow-500/30 transition-colors"
               >
-                <p className="text-slate-300 italic mb-4">"{item.text}"</p>
+                <p className="text-slate-300 italic mb-4">&quot;{item.text}&quot;</p>
                 <h4 className="text-yellow-500 font-semibold">{item.name}</h4>
               </div>
             ))}
@@ -545,7 +555,7 @@ export default function Home() {
                 <span className="text-yellow-500">Himpunan Biasa.</span>
               </h2>
               <p className="text-slate-400 text-lg leading-relaxed">
-                "Didikan Anak TI" tentang membentuk mental baja dan logika
+                &quot;Didikan Anak TI&quot; tentang membentuk mental baja dan logika
                 algoritma yang kuat. Di SAKTI, semua sama rata, teman adalah
                 partner coding, dan kampus adalah rumah kedua.
               </p>

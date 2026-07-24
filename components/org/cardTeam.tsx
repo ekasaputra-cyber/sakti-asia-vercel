@@ -2,6 +2,7 @@ import { Member } from "@/types/organization";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { getImageUrl }  from "@/lib/api";
 
 export default function TeamCard({ member }: { member: Member }) {
   // Ambil inisial nama (Misal: "Andi Saputra" -> "AS")
@@ -29,7 +30,7 @@ export default function TeamCard({ member }: { member: Member }) {
           <div className="absolute -inset-2 rounded-full bg-yellow-500/20 opacity-0 group-hover:opacity-100 blur-md transition-opacity duration-500"></div>
           
           <Avatar className="h-24 w-24 md:h-28 md:w-28 border-2 border-slate-700 group-hover:border-yellow-400 transition-colors relative">
-            <AvatarImage src={member.image} alt={member.name} className="object-cover" />
+            <AvatarImage src={getImageUrl(member.image)} alt={member.name} className="object-cover" />
             <AvatarFallback className="bg-slate-800 text-slate-400 font-bold text-xl group-hover:text-yellow-400 group-hover:bg-slate-950 transition-colors">
               {initials}
             </AvatarFallback>
