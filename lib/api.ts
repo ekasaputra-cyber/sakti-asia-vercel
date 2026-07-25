@@ -63,7 +63,8 @@ export function getImageUrl(
 ): string | undefined {
     if (!path) return undefined;
     if (path.startsWith("http://") || path.startsWith("https://")) return path;
-    const cleanPath = path.startsWith("/") ? path.slice(1) : path;
+    const normalized = path.replace(/\\/g, "/");
+    const cleanPath = normalized.startsWith("/") ? normalized.slice(1) : normalized;
     return `${STORAGE_BASE_URL}/storage/${cleanPath}`;
 }
 
