@@ -42,6 +42,22 @@ export interface Demissioner {
     image: string | null;
 }
 
+export interface OrgEvent {
+    id: number;
+    title: string;
+    category: string;
+    start_date: string; // format "YYYY-MM-DD"
+    end_date: string | null; // format "YYYY-MM-DD", null kalau acara 1 hari
+    description: string | null;
+}
+
+export interface OrgStat {
+    id: number;
+    label: string;
+    number: number;
+    suffix: string | null;
+}
+
 // Bentuk data mentah yang dikirim backend, sebelum dinormalisasi.
 // Field yang seharusnya array bisa datang sebagai string (belum di-cast di Laravel).
 type RawLeader = Omit<Leader, "misi"> & { misi: unknown };
@@ -130,6 +146,24 @@ export async function getDemissioners(): Promise<Demissioner[]> {
         next: { revalidate: 60 },
     });
     if (!res.ok) throw new Error("Gagal mengambil data demisioner");
+    const json = await res.json();
+    return json.data;
+}
+
+export async function getEvents(): Promise<OrgEvent[]> {
+    const res = await fetch(`${API_URL}/events`, {
+        next: { revalidate: 60 },
+    });
+    if (!res.ok) throw new Error("Gagal mengambil data agenda");
+    const json = await res.json();
+    return json.data;
+}
+
+export async function getStats(): Promise<OrgStat[]> {
+    const res = await fetch(`${API_URL}/stats`, {
+        next: { revalidate: 60 },
+    });
+    if (!res.ok) throw new Error("Gagal mengambil data statistik");
     const json = await res.json();
     return json.data;
 }

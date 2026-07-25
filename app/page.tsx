@@ -22,9 +22,50 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
-import { getLeadership, Leader } from "@/lib/api";
+import { getLeadership, getEvents, getStats, Leader, OrgEvent, OrgStat } from "@/lib/api";
 import TeamCard from "@/components/org/cardTeam";
 import { useEffect, useState } from "react";
+
+// Nama-nama bulan buat format tanggal ala Indonesia (12 Maret 2026, dst).
+const NAMA_BULAN = [
+  "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+  "Juli", "Agustus", "September", "Oktober", "November", "Desember",
+];
+
+// Parse string "YYYY-MM-DD" dari API jadi Date lokal (hindari pergeseran timezone
+// yang bisa kejadian kalau langsung new Date("YYYY-MM-DD")).
+function parseApiDate(dateStr: string): Date {
+  const [year, month, day] = dateStr.split("-").map(Number);
+  return new Date(year, month - 1, day);
+}
+
+// Format tampilan tanggal event: "12 Maret 2026" untuk 1 hari,
+// "15-17 Mei 2026" untuk rentang tanggal (beda hari, bulan & tahun sama).
+function formatEventDate(event: OrgEvent): string {
+  const start = parseApiDate(event.start_date);
+  if (!event.end_date || event.end_date === event.start_date) {
+    return `${start.getDate()} ${NAMA_BULAN[start.getMonth()]} ${start.getFullYear()}`;
+  }
+  const end = parseApiDate(event.end_date);
+  if (start.getMonth() === end.getMonth() && start.getFullYear() === end.getFullYear()) {
+    return `${start.getDate()}-${end.getDate()} ${NAMA_BULAN[start.getMonth()]} ${start.getFullYear()}`;
+  }
+  return `${start.getDate()} ${NAMA_BULAN[start.getMonth()]} - ${end.getDate()} ${NAMA_BULAN[end.getMonth()]} ${end.getFullYear()}`;
+}
+
+// Pecah satu event jadi array Date per hari (buat event multi-hari kayak "15-17 Mei").
+function expandEventDates(event: OrgEvent): Date[] {
+  const start = parseApiDate(event.start_date);
+  if (!event.end_date) return [start];
+  const end = parseApiDate(event.end_date);
+  const dates: Date[] = [];
+  const cursor = new Date(start);
+  while (cursor <= end) {
+    dates.push(new Date(cursor));
+    cursor.setDate(cursor.getDate() + 1);
+  }
+  return dates;
+}
 
 function AnimatedCounter({
   target,
@@ -65,59 +106,38 @@ function AnimatedCounter({
 export default function Home() {
   const [pembina, setPembina] = useState<Leader | null>(null);
   const [ketua, setKetua] = useState<Leader | null>(null);
+  const [events, setEvents] = useState<OrgEvent[]>([]);
+  const [orgStats, setOrgStats] = useState<OrgStat[]>([]);
 
   useEffect(() => {
   getLeadership().then((data) => {
     setPembina(data.find((l) => l.position_key === "pembina") ?? null);
     setKetua(data.find((l) => l.position_key === "ketua_umum") ?? null);
   });
+  getEvents().then(setEvents);
+  getStats().then(setOrgStats);
 }, []);
 
-  // DATA AGENDA
-  const prokers = [
-    {
-      title: "Tech Summit 2026",
-      date: "12 Maret 2026",
-      category: "Seminar",
-      desc: "Konferensi teknologi terbesar tahun ini, menghadirkan pembicara dari Google & GoTo membahas masa depan AI.",
-    },
-    {
-      title: "Code Camp : Zero to Hero",
-      date: "15-17 Mei 2026",
-      category: "Bootcamp",
-      desc: "Pelatihan intensif 3 hari 2 malam. Fokus pada fundamental algoritma dan clean code untuk mahasiswa baru.",
-    },
-    {
-      title: "Hackathon SAKTI",
-      date: "20 Agustus 2026",
-      category: "Kompetisi",
-      desc: "Tantangan coding 24 jam non-stop. Bangun solusi cerdas untuk permasalahan Smart City.",
-    },
-    {
-      title: "TI Festival & Expo",
-      date: "10 November 2026",
-      category: "Pameran",
-      desc: "Puncak apresiasi karya mahasiswa. Pameran tugas akhir, bazar startup, dan malam penganugerahan.",
-    },
-  ];
+  // DATA AGENDA — diambil dari API (/events), dibentuk ulang biar cocok
+  // sama format yang dipakai di timeline & kalender.
+  const prokers = events.map((ev) => ({
+    title: ev.title,
+    date: formatEventDate(ev),
+    category: ev.category,
+    desc: ev.description ?? "",
+  }));
 
-  const eventDates = [
-    new Date(2026, 2, 12), // 12 Maret 2026 (bulan mulai dari 0, jadi 2 = Maret)
-    new Date(2026, 4, 15), // 15 Mei 2026
-    new Date(2026, 4, 16),
-    new Date(2026, 4, 17),
-    new Date(2026, 7, 20), // 20 Agustus 2026
-    new Date(2026, 10, 10), // 10 November 2026
-  ];
+  const eventDates = events.flatMap((ev) => expandEventDates(ev));
 
-  const prokerWithDate = [
-    { ...prokers[0], dateObj: new Date(2026, 2, 12) },
-    { ...prokers[1], dateObj: new Date(2026, 4, 15) },
-    { ...prokers[1], dateObj: new Date(2026, 4, 16) },
-    { ...prokers[1], dateObj: new Date(2026, 4, 17) },
-    { ...prokers[2], dateObj: new Date(2026, 7, 20) },
-    { ...prokers[3], dateObj: new Date(2026, 10, 10) },
-  ];
+  const prokerWithDate = events.flatMap((ev) =>
+    expandEventDates(ev).map((dateObj) => ({
+      title: ev.title,
+      date: formatEventDate(ev),
+      category: ev.category,
+      desc: ev.description ?? "",
+      dateObj,
+    })),
+  );
 
   const [open, setOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
@@ -146,40 +166,22 @@ export default function Home() {
       item.dateObj.toDateString() === selectedDate.toDateString(),
   );
 
-  const stats = [
-    {
-      number: 500,
-      suffix: "+",
-      label: "Alumni Tersebar",
-      bg: "bg-yellow-500/10",
-      border: "border-yellow-500/30",
-      text: "text-yellow-400",
-    },
-    {
-      number: 30,
-      suffix: "+",
-      label: "Event Diselenggarakan",
-      bg: "bg-blue-500/10",
-      border: "border-blue-500/30",
-      text: "text-blue-400",
-    },
-    {
-      number: 6,
-      suffix: "",
-      label: "Divisi Aktif",
-      bg: "bg-green-500/10",
-      border: "border-green-500/30",
-      text: "text-green-400",
-    },
-    {
-      number: 1000,
-      suffix: "+",
-      label: "Peserta Kegiatan",
-      bg: "bg-purple-500/10",
-      border: "border-purple-500/30",
-      text: "text-purple-400",
-    },
+  // Palet warna buat kartu statistik, dirotasi berdasar urutan data dari API
+  // (jumlah kartu bisa nambah/berkurang di admin, warnanya tetap variatif).
+  const STAT_THEMES = [
+    { bg: "bg-yellow-500/10", border: "border-yellow-500/30", text: "text-yellow-400" },
+    { bg: "bg-blue-500/10", border: "border-blue-500/30", text: "text-blue-400" },
+    { bg: "bg-green-500/10", border: "border-green-500/30", text: "text-green-400" },
+    { bg: "bg-purple-500/10", border: "border-purple-500/30", text: "text-purple-400" },
   ];
+
+  const stats = orgStats.map((s, i) => ({
+    number: s.number,
+    suffix: s.suffix ?? "",
+    label: s.label,
+    ...STAT_THEMES[i % STAT_THEMES.length],
+  }));
+
   return (
     <div className="flex flex-col min-h-screen bg-slate-950 text-white">
       {/* --- HERO SECTION --- */}
