@@ -85,7 +85,7 @@ export default async function DivisiPage() {
               Temukan Anggota
             </h3>
             <p className="text-slate-400 text-sm">
-              Cari nama anggota berdasarkan divisi
+              Cari nama anggota berdasarkan departemen atau gunakan fitur pencarian untuk menemukan anggota tertentu.
             </p>
           </div>
 
