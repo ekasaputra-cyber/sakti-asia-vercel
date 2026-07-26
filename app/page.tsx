@@ -6,8 +6,6 @@ import {
   ChevronRight,
   ArrowRight,
   Clock,
-  Users,
-  Trophy,
   Star,
   Calendar,
 } from "lucide-react";
@@ -22,9 +20,48 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
-import { getLeadership, getEvents, getStats, Leader, OrgEvent, OrgStat } from "@/lib/api";
+import { getLeadership, getEvents, getStats, getAchievements, getGalleryPhotos, getImageUrl, Leader, OrgEvent, OrgStat, Achievement, GalleryPhoto } from "@/lib/api";
 import TeamCard from "@/components/org/cardTeam";
+import AchievementCard from "@/components/org/achievementCard";
 import { useEffect, useState } from "react";
+
+// Kotak preview galeri di home: nampilin foto asli kalau ada,
+// fallback ke kotak placeholder "Foto N" kalau slot itu belum diisi admin.
+function GalleryPreviewSlot({
+  photo,
+  label,
+  className,
+  textClassName = "text-slate-600",
+}: {
+  photo: GalleryPhoto | undefined;
+  label: string;
+  className: string;
+  textClassName?: string;
+}) {
+  const [imgError, setImgError] = useState(false);
+  const imageUrl = photo ? getImageUrl(photo.image) : undefined;
+  const showImage = Boolean(imageUrl) && !imgError;
+
+  if (showImage) {
+    return (
+      <div className={`${className} overflow-hidden`}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={imageUrl}
+          alt={photo?.caption ?? label}
+          onError={() => setImgError(true)}
+          className="w-full h-full object-cover"
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div className={`${className} flex items-center justify-center ${textClassName}`}>
+      {label}
+    </div>
+  );
+}
 
 // Nama-nama bulan buat format tanggal ala Indonesia (12 Maret 2026, dst).
 const NAMA_BULAN = [
@@ -108,6 +145,8 @@ export default function Home() {
   const [ketua, setKetua] = useState<Leader | null>(null);
   const [events, setEvents] = useState<OrgEvent[]>([]);
   const [orgStats, setOrgStats] = useState<OrgStat[]>([]);
+  const [achievements, setAchievements] = useState<Achievement[]>([]);
+  const [galleryPhotos, setGalleryPhotos] = useState<GalleryPhoto[]>([]);
 
   useEffect(() => {
   getLeadership().then((data) => {
@@ -116,6 +155,8 @@ export default function Home() {
   });
   getEvents().then(setEvents);
   getStats().then(setOrgStats);
+  getAchievements().then(setAchievements);
+  getGalleryPhotos().then(setGalleryPhotos);
 }, []);
 
   // DATA AGENDA — diambil dari API (/events), dibentuk ulang biar cocok
@@ -141,24 +182,6 @@ export default function Home() {
 
   const [open, setOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
-
-  const achievements = [
-    {
-      name: "Rina Wijaya",
-      event: "Juara 1 Gemastik UX Design",
-      image: "/placeholder-user.jpg",
-    },
-    {
-      name: "Tim SAKTI Go",
-      event: "Gold Medal Lomba Inovasi IoT",
-      image: "/placeholder-user.jpg",
-    },
-    {
-      name: "Dimas Anggara",
-      event: "Google Solution Challenge Top 50",
-      image: "/placeholder-user.jpg",
-    },
-  ];
 
   const selectedEvents = prokerWithDate.filter(
     (item) =>
@@ -480,32 +503,14 @@ export default function Home() {
             </p>
           </div>
           <div className="grid md:grid-cols-3 gap-8">
-            {achievements.map((item, i) => (
-              <div
-                key={i}
-                className="group relative rounded-2xl overflow-hidden aspect-4/5 md:aspect-auto md:h-100"
-              >
-                <div className="absolute inset-0 bg-slate-800">
-                  <div className="w-full h-full flex items-center justify-center text-slate-700">
-                    <Users className="h-20 w-20" />
-                  </div>
-                </div>
-                <div className="absolute inset-0 bg-linear-to-t from-black via-black/50 to-transparent p-6 flex flex-col justify-end">
-                  <div className="translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                    <div className="flex items-center gap-2 text-yellow-400 mb-1">
-                      <Trophy className="h-4 w-4" />
-                      <span className="text-xs font-bold uppercase tracking-wider">
-                        Winner
-                      </span>
-                    </div>
-                    <h3 className="text-xl font-bold text-white mb-1">
-                      {item.name}
-                    </h3>
-                    <p className="text-slate-300 text-sm">{item.event}</p>
-                  </div>
-                </div>
-                <div className="absolute inset-0 border-2 border-transparent group-hover:border-yellow-500/50 rounded-2xl transition-colors pointer-events-none"></div>
-              </div>
+            {achievements.map((item) => (
+              <AchievementCard
+                key={item.id}
+                name={item.name}
+                achievement={item.achievement}
+                badge={item.badge}
+                image={item.image}
+              />
             ))}
           </div>
         </div>
@@ -578,26 +583,37 @@ export default function Home() {
                   </li>
                 ))}
               </ul>
-              <Button className="bg-white text-black hover:bg-slate-200 mt-4">
-                Lihat Galeri Kegiatan
-              </Button>
+              <Link href="/galeri">
+                <Button className="bg-white text-black hover:bg-slate-200 mt-4">
+                  Lihat Galeri Kegiatan
+                </Button>
+              </Link>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-4 mt-8">
-                <div className="h-40 w-full bg-slate-800 rounded-2xl border border-slate-700 flex items-center justify-center text-slate-600">
-                  Foto 1
-                </div>
-                <div className="h-56 w-full bg-slate-900 rounded-2xl border border-slate-800 flex items-center justify-center text-slate-600 bg-hive-pattern">
-                  Foto 2
-                </div>
+                <GalleryPreviewSlot
+                  photo={galleryPhotos[0]}
+                  label="Foto 1"
+                  className="h-40 w-full bg-slate-800 rounded-2xl border border-slate-700"
+                />
+                <GalleryPreviewSlot
+                  photo={galleryPhotos[1]}
+                  label="Foto 2"
+                  className="h-56 w-full bg-slate-900 rounded-2xl border border-slate-800 bg-hive-pattern"
+                />
               </div>
               <div className="space-y-4">
-                <div className="h-56 w-full bg-yellow-500/10 rounded-2xl border border-yellow-500/20 flex items-center justify-center text-yellow-500/50">
-                  Foto 3
-                </div>
-                <div className="h-40 w-full bg-slate-800 rounded-2xl border border-slate-700 flex items-center justify-center text-slate-600">
-                  Foto 4
-                </div>
+                <GalleryPreviewSlot
+                  photo={galleryPhotos[2]}
+                  label="Foto 3"
+                  className="h-56 w-full bg-yellow-500/10 rounded-2xl border border-yellow-500/20"
+                  textClassName="text-yellow-500/50"
+                />
+                <GalleryPreviewSlot
+                  photo={galleryPhotos[3]}
+                  label="Foto 4"
+                  className="h-40 w-full bg-slate-800 rounded-2xl border border-slate-700"
+                />
               </div>
             </div>
           </div>

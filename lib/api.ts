@@ -58,6 +58,20 @@ export interface OrgStat {
     suffix: string | null;
 }
 
+export interface Achievement {
+    id: number;
+    name: string;
+    achievement: string;
+    badge: string;
+    image: string | null;
+}
+
+export interface GalleryPhoto {
+    id: number;
+    image: string;
+    caption: string | null;
+}
+
 // Bentuk data mentah yang dikirim backend, sebelum dinormalisasi.
 // Field yang seharusnya array bisa datang sebagai string (belum di-cast di Laravel).
 type RawLeader = Omit<Leader, "misi"> & { misi: unknown };
@@ -164,6 +178,24 @@ export async function getStats(): Promise<OrgStat[]> {
         next: { revalidate: 60 },
     });
     if (!res.ok) throw new Error("Gagal mengambil data statistik");
+    const json = await res.json();
+    return json.data;
+}
+
+export async function getAchievements(): Promise<Achievement[]> {
+    const res = await fetch(`${API_URL}/achievements`, {
+        next: { revalidate: 60 },
+    });
+    if (!res.ok) throw new Error("Gagal mengambil data achievement");
+    const json = await res.json();
+    return json.data;
+}
+
+export async function getGalleryPhotos(): Promise<GalleryPhoto[]> {
+    const res = await fetch(`${API_URL}/gallery`, {
+        next: { revalidate: 60 },
+    });
+    if (!res.ok) throw new Error("Gagal mengambil data galeri");
     const json = await res.json();
     return json.data;
 }
