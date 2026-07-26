@@ -149,15 +149,15 @@ export default function Home() {
   const [galleryPhotos, setGalleryPhotos] = useState<GalleryPhoto[]>([]);
 
   useEffect(() => {
-  getLeadership().then((data) => {
-    setPembina(data.find((l) => l.position_key === "pembina") ?? null);
-    setKetua(data.find((l) => l.position_key === "ketua_umum") ?? null);
-  });
-  getEvents().then(setEvents);
-  getStats().then(setOrgStats);
-  getAchievements().then(setAchievements);
-  getGalleryPhotos().then(setGalleryPhotos);
-}, []);
+    getLeadership().then((data) => {
+      setPembina(data.find((l) => l.position_key === "pembina") ?? null);
+      setKetua(data.find((l) => l.position_key === "ketua_umum") ?? null);
+    });
+    getEvents().then(setEvents);
+    getStats().then(setOrgStats);
+    getAchievements().then(setAchievements);
+    getGalleryPhotos().then(setGalleryPhotos);
+  }, []);
 
   // DATA AGENDA — diambil dari API (/events), dibentuk ulang biar cocok
   // sama format yang dipakai di timeline & kalender.
@@ -583,11 +583,6 @@ export default function Home() {
                   </li>
                 ))}
               </ul>
-              <Link href="/galeri">
-                <Button className="bg-white text-black hover:bg-slate-200 mt-4">
-                  Lihat Galeri Kegiatan
-                </Button>
-              </Link>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-4 mt-8">
@@ -599,7 +594,7 @@ export default function Home() {
                 <GalleryPreviewSlot
                   photo={galleryPhotos[1]}
                   label="Foto 2"
-                  className="h-56 w-full bg-slate-900 rounded-2xl border border-slate-800 bg-hive-pattern"
+                  className="h-56 w-full bg-slate-900 rounded-2xl border border-slate-800"
                 />
               </div>
               <div className="space-y-4">
@@ -620,39 +615,39 @@ export default function Home() {
         </div>
       </section>
 
-{/* --- SECTION: PUNYA PERTANYAAN? --- */}
-<section className="py-20 bg-black text-center border-t border-slate-900">
-  <div className="container px-6 md:px-12 lg:px-24">
-    <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-      Masih Punya Pertanyaan?
-    </h2>
-    <p className="text-slate-400 mb-8 max-w-2xl mx-auto">
-      Kalau belum menemukan jawaban yang kamu cari, cek FAQ kami
-      atau hubungi tim SAKTI untuk bertanya langsung.
-    </p>
+      {/* --- SECTION: PUNYA PERTANYAAN? --- */}
+      <section className="py-20 bg-black text-center border-t border-slate-900">
+        <div className="container px-6 md:px-12 lg:px-24">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+            Masih Punya Pertanyaan?
+          </h2>
+          <p className="text-slate-400 mb-8 max-w-2xl mx-auto">
+            Kalau belum menemukan jawaban yang kamu cari, cek FAQ kami
+            atau hubungi tim SAKTI untuk bertanya langsung.
+          </p>
 
-    <div className="flex flex-col sm:flex-row gap-4 justify-center">
-      <Link href="#faq">
-        <Button
-          variant="outline"
-          className="border-yellow-500 text-yellow-500 hover:bg-yellow-500 hover:text-black"
-        >
-          Lihat FAQ
-        </Button>
-      </Link>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link href="#faq">
+              <Button
+                variant="outline"
+                className="border-yellow-500 text-yellow-500 hover:bg-yellow-500 hover:text-black"
+              >
+                Lihat FAQ
+              </Button>
+            </Link>
 
-      <Link href="/contact">
-        <Button className="bg-yellow-500 hover:bg-yellow-400 text-black font-bold">
-          Hubungi Kami
-        </Button>
-      </Link>
-    </div>
-  </div>
-</section>
+            <Link href="/contact">
+              <Button className="bg-yellow-500 hover:bg-yellow-400 text-black font-bold">
+                Hubungi Kami
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
       {/* --- SECTION: FAQ --- */}
-      <section 
-      id="faq"
-      className="py-20 bg-slate-950 border-t border-slate-900">
+      <section
+        id="faq"
+        className="py-20 bg-slate-950 border-t border-slate-900">
         <div className="mx-auto max-w-3xl px-6">
           <h2 className="text-3xl font-bold text-center text-white mb-12">
             Frequently Asked Questions
@@ -669,8 +664,8 @@ export default function Home() {
                 a: "Biasanya setiap awal semester genap. Pantau terus pengumuman resmi.",
               },
               {
-                q: "Apakah bisa ikut lebih dari satu divisi?",
-                a: "Bisa, sesuai komitmen dan kesepakatan internal.",
+                q: "Manfaat apa yang bisa didapat setelah jadi anggota SAKTI?",
+                a: "Pengalaman organisasi, relasi antar mahasiswa TI, serta koneksi dengan organisasi ataupun komunitas diluar kampus melalui berbagai kegiatan SAKTI.",
               },
             ].map((item, i) => (
               <div

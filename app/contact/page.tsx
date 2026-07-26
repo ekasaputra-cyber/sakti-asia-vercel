@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { getContactInfo, OrgContact } from "@/lib/api";
 import {
   Mail,
   Send,
@@ -12,13 +13,25 @@ import {
   Clock,
 } from "lucide-react";
 
-const MAPS_QUERY = "-7.937973,112.6266227";
+// Fallback dipakai sebentar doang selagi data asli dari API belum kelar di-fetch,
+// biar nggak ada layout kosong pas render pertama.
+const FALLBACK_CONTACT: OrgContact = {
+  address: "Institut Teknologi dan Bisnis Asia Malang",
+  email: "himapro.sakti@gmail.com",
+  office_hours: "Senin - Jumat, 09.00 - 16.00 WIB",
+  maps_query: null,
+};
 
 export default function ContactPage() {
   const [form, setForm] = useState({ name: "", email: "", message: "" });
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [contactInfo, setContactInfo] = useState<OrgContact>(FALLBACK_CONTACT);
+
+  useEffect(() => {
+    getContactInfo().then(setContactInfo);
+  }, []);
 
   function handleChange(
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -89,27 +102,23 @@ export default function ContactPage() {
                   <div className="space-y-4 text-sm">
                     <div className="flex gap-3 items-start">
                       <MapPin className="h-5 w-5 text-yellow-500 shrink-0 mt-0.5" />
-                      <span className="text-slate-300">
-                        Institut Teknologi dan Bisnis Asia Malang
-                        <br />
-                        Jl. Soekarno Hatta, Rembuksari No. 1A
-                        <br />
-                        Mojolangu, Lowokwaru, Kota Malang 65113
+                      <span className="text-slate-300 whitespace-pre-line">
+                        {contactInfo.address}
                       </span>
                     </div>
                     <div className="flex gap-3 items-center">
                       <Mail className="h-5 w-5 text-yellow-500 shrink-0" />
                       <a
-                        href="mailto:himapro.sakti@gmail.com"
+                        href={`mailto:${contactInfo.email}`}
                         className="text-slate-300 hover:text-yellow-500 transition-colors"
                       >
-                        himapro.sakti@gmail.com
+                        {contactInfo.email}
                       </a>
                     </div>
                     <div className="flex gap-3 items-center">
                       <Clock className="h-5 w-5 text-yellow-500 shrink-0" />
                       <span className="text-slate-300">
-                        Senin – Jumat, 09.00 – 16.00 WIB
+                        {contactInfo.office_hours}
                       </span>
                     </div>
                   </div>
@@ -117,16 +126,18 @@ export default function ContactPage() {
               </div>
 
               {/* --- MAPS EMBED --- */}
-              <div className="rounded-2xl overflow-hidden border border-slate-800 h-72">
-                <iframe
-                  src={`https://www.google.com/maps?q=${MAPS_QUERY}&output=embed`}
-                  width="100%"
-                  height="100%"
-                  style={{ border: 0 }}
-                  loading="lazy"
-                  title="Lokasi Sekretariat SAKTI"
-                />
-              </div>
+              {contactInfo.maps_query && (
+                <div className="rounded-2xl overflow-hidden border border-slate-800 h-72">
+                  <iframe
+                    src={`https://www.google.com/maps?q=${contactInfo.maps_query}&output=embed`}
+                    width="100%"
+                    height="100%"
+                    style={{ border: 0 }}
+                    loading="lazy"
+                    title="Lokasi Sekretariat SAKTI"
+                  />
+                </div>
+              )}
             </div>
 
             {/* --- KOLOM KANAN (desktop) / ATAS (mobile): FORM --- */}

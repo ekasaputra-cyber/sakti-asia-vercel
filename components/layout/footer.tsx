@@ -1,8 +1,11 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Github, Instagram, Linkedin, Mail, MapPin } from "lucide-react";
+import { getContactInfo } from "@/lib/api";
 
-export default function Footer() {
+export default async function Footer() {
+  const contact = await getContactInfo();
+
   return (
     <footer className="border-t border-yellow-500/10 bg-black text-slate-400 pt-16 pb-8">
       <div className="container px-4 md:px-8">
@@ -28,10 +31,16 @@ export default function Footer() {
               Sindikat Akademi Teknik Informatika. Wadah kolaborasi mahasiswa TI untuk mengembangkan hard skill, soft skill, dan jejaring profesional di era digital.
             </p>
             <div className="flex gap-4 pt-2">
-              <SocialIcon icon={Instagram} href="#" />
-              <SocialIcon icon={Linkedin} href="#" />
-              <SocialIcon icon={Github} href="#" />
-              <SocialIcon icon={Mail} href="#" />
+              {contact.instagram_url && (
+                <SocialIcon icon={Instagram} href={contact.instagram_url} />
+              )}
+              {contact.linkedin_url && (
+                <SocialIcon icon={Linkedin} href={contact.linkedin_url} />
+              )}
+              {contact.github_url && (
+                <SocialIcon icon={Github} href={contact.github_url} />
+              )}
+              <SocialIcon icon={Mail} href={`mailto:${contact.email}`} />
             </div>
           </div>
 
@@ -43,6 +52,7 @@ export default function Footer() {
               <li><Link href="/profil" className="hover:text-yellow-500 transition-colors">Tentang Kami</Link></li>
               <li><Link href="/divisi" className="hover:text-yellow-500 transition-colors">Divisi & Proker</Link></li>
               <li><Link href="/blog" className="hover:text-yellow-500 transition-colors">Blog & Berita</Link></li>
+              <li><Link href="/contact" className="hover:text-yellow-500 transition-colors">Kontak</Link></li>
               <li><Link href="/pendaftaran" className="hover:text-yellow-500 transition-colors">Open Recruitment</Link></li>
             </ul>
           </div>
@@ -53,16 +63,14 @@ export default function Footer() {
             <ul className="space-y-4 text-sm">
               <li className="flex gap-3 items-start">
                 <MapPin className="h-5 w-5 text-yellow-500 shrink-0 mt-0.5" />
-                <span>
-                  Jl. Soekarno Hatta, Rembuksari No. 1A
-                  <br />
-                  Mojolangu, Lowokwaru, Kota Malang 65113
+                <span className="whitespace-pre-line">
+                  {contact.address}
                 </span>
               </li>
               <li className="flex gap-3 items-center">
                 <Mail className="h-5 w-5 text-yellow-500 shrink-0" />
-                <a href="mailto:himapro.sakti@gmail.com" className="hover:text-yellow-500 transition-colors">
-                  himapro.sakti@gmail.com
+                <a href={`mailto:${contact.email}`} className="hover:text-yellow-500 transition-colors">
+                  {contact.email}
                 </a>
               </li>
             </ul>
@@ -72,7 +80,7 @@ export default function Footer() {
 
         {/* --- BOTTOM SECTION (Copyright) --- */}
         <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-600">
-          <p>&copy; 2026 SAKTI Organisasi TI. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} SAKTI Organisasi TI. All rights reserved.</p>
           <div className="flex gap-6">
             <Link href="#" className="hover:text-slate-400">Privacy Policy</Link>
             <Link href="#" className="hover:text-slate-400">Terms of Service</Link>

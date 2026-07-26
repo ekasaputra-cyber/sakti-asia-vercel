@@ -72,6 +72,16 @@ export interface GalleryPhoto {
     caption: string | null;
 }
 
+export interface OrgContact {
+    address: string;
+    email: string;
+    office_hours: string;
+    maps_query: string | null;
+    instagram_url: string | null;
+    linkedin_url: string | null;
+    github_url: string | null;
+}
+
 // Bentuk data mentah yang dikirim backend, sebelum dinormalisasi.
 // Field yang seharusnya array bisa datang sebagai string (belum di-cast di Laravel).
 type RawLeader = Omit<Leader, "misi"> & { misi: unknown };
@@ -155,6 +165,18 @@ export async function getDepartments(): Promise<Department[]> {
     return (json.data as RawDepartment[]).map(normalizeDepartment);
 }
 
+// Ambil 1 departemen berdasarkan slug. Return null kalau nggak ketemu
+// (404 dari backend), biar halaman detail bisa panggil notFound().
+export async function getDepartment(slug: string): Promise<Department | null> {
+    const res = await fetch(`${API_URL}/departments/${slug}`, {
+        next: { revalidate: 60 },
+    });
+    if (res.status === 404) return null;
+    if (!res.ok) throw new Error("Gagal mengambil data departemen");
+    const json = await res.json();
+    return normalizeDepartment(json.data as RawDepartment);
+}
+
 export async function getDemissioners(): Promise<Demissioner[]> {
     const res = await fetch(`${API_URL}/demissioners`, {
         next: { revalidate: 60 },
@@ -196,6 +218,15 @@ export async function getGalleryPhotos(): Promise<GalleryPhoto[]> {
         next: { revalidate: 60 },
     });
     if (!res.ok) throw new Error("Gagal mengambil data galeri");
+    const json = await res.json();
+    return json.data;
+}
+
+export async function getContactInfo(): Promise<OrgContact> {
+    const res = await fetch(`${API_URL}/contact-info`, {
+        next: { revalidate: 60 },
+    });
+    if (!res.ok) throw new Error("Gagal mengambil data kontak");
     const json = await res.json();
     return json.data;
 }
