@@ -141,20 +141,15 @@ export default function PendaftaranPage() {
                 <div className="container px-4 relative z-10">
                     <Badge
                         variant="outline"
-                        className="mb-4 border-yellow-500/50 text-yellow-400 bg-yellow-500/10"
-                    >
+                        className="mb-4 border-yellow-500/50 text-yellow-400 bg-yellow-500/10">
+                        <UserPlus className="h-6 w-6 text-yellow-500" />
                         Open Recruitment 2026
                     </Badge>
-                    <div className="inline-flex items-center justify-center h-12 w-12 rounded-full bg-yellow-500/10 mb-6 mx-auto">
-                        <UserPlus className="h-6 w-6 text-yellow-500" />
-                    </div>
-                    <h1 className="text-3xl md:text-4xl font-bold mb-4">
-                        Gabung Bersama SAKTI
+                    <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-4">
+                        Gabung Bersama <span className="text-yellow-500">SAKTI</span>
                     </h1>
                     <p className="text-slate-400 max-w-xl mx-auto">
                         Isi formulir di bawah ini untuk mendaftar jadi bagian dari Hive.
-                        Nggak perlu jago coding dulu — yang penting mau belajar dan
-                        berkembang bareng.
                     </p>
                 </div>
             </section>

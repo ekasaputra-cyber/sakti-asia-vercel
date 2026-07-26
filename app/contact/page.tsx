@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -59,13 +60,17 @@ export default function ContactPage() {
       {/* --- HERO --- */}
       <section className="py-20 border-b border-slate-900 text-center">
         <div className="container px-4">
-          <div className="inline-flex items-center justify-center h-12 w-12 rounded-full bg-yellow-500/10 mb-6">
+          <Badge
+            variant="outline"
+            className="mb-4 border-yellow-500/50 text-yellow-400 bg-yellow-500/10"
+          >
             <Mail className="h-6 w-6 text-yellow-500" />
-          </div>
-          <h1 className="text-3xl md:text-4xl font-bold mb-4">
-            Hubungi Kami
+            Pesan & Kontak
+          </Badge>
+          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-4">
+            Hubungi <span className="text-yellow-500">Kami.</span>
           </h1>
-          <p className="text-slate-400 max-w-xl mx-auto">
+          <p className="text-slate-400 text-lg max-w-2xl mx-auto">
             Punya pertanyaan, saran, atau mau kolaborasi dengan SAKTI? Kirim
             pesan kamu atau langsung datang ke sekretariat.
           </p>
