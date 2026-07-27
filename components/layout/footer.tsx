@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Github, Instagram, Linkedin, Mail, MapPin } from "lucide-react";
+import { Github, Instagram, Youtube, Mail, MapPin } from "lucide-react";
 import { getContactInfo } from "@/lib/api";
 
 export default async function Footer() {
@@ -34,8 +34,8 @@ export default async function Footer() {
               {contact.instagram_url && (
                 <SocialIcon icon={Instagram} href={contact.instagram_url} />
               )}
-              {contact.linkedin_url && (
-                <SocialIcon icon={Linkedin} href={contact.linkedin_url} />
+              {contact.youtube_url && (
+                <SocialIcon icon={Youtube} href={contact.youtube_url} />
               )}
               {contact.github_url && (
                 <SocialIcon icon={Github} href={contact.github_url} />

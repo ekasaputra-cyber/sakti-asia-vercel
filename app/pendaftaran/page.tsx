@@ -348,7 +348,7 @@ export default function PendaftaranPage() {
                                                     className="bg-black border-slate-700 h-11 focus-visible:border-yellow-500 focus-visible:ring-yellow-500/40 file:text-yellow-500"
                                                 />
                                                 <p className="text-xs text-slate-500">
-                                                    Format PDF/PNG maks. 2MB.
+                                                    Format PDF maks. 2MB.
                                                 </p>
                                                 {fileErrors.cv && (
                                                     <p className="text-xs text-red-500">

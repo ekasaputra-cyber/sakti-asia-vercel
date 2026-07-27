@@ -78,7 +78,7 @@ export interface OrgContact {
     office_hours: string;
     maps_query: string | null;
     instagram_url: string | null;
-    linkedin_url: string | null;
+    youtube_url: string | null;
     github_url: string | null;
 }
 

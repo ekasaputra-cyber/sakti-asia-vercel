@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { appendRow } from "@/lib/google-sheets";
+import { syncToLaravel } from "@/lib/laravel-sync";
 
 export async function POST(request: NextRequest) {
   try {
@@ -35,6 +36,10 @@ export async function POST(request: NextRequest) {
     });
 
     await appendRow("Contact", [timestamp, name, email, message]);
+
+    // Kirim salinan ke database Laravel juga (best-effort, tidak menggagalkan
+    // request ini kalau Laravel-nya lagi down).
+    await syncToLaravel("/contact-submissions", { name, email, message });
 
     return NextResponse.json({ success: true });
   } catch (error) {

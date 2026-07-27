@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { appendRow, uploadFileToDrive } from "@/lib/google-sheets";
+import { syncToLaravel } from "@/lib/laravel-sync";
 
 const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB, sesuai batas yang ditampilkan di form
 
@@ -117,6 +118,20 @@ export async function POST(request: NextRequest) {
             cvUrl,
             sertifikatUrl,
         ]);
+
+        // Kirim salinan ke database Laravel juga (best-effort, tidak menggagalkan
+        // request ini kalau Laravel-nya lagi down).
+        await syncToLaravel("/pendaftaran-submissions", {
+            nama: String(nama),
+            ttl: String(ttl),
+            email: String(email),
+            nim: String(nim),
+            whatsapp: String(whatsapp),
+            motivasi: String(motivasi),
+            foto_ktm_url: fotoKtmUrl,
+            cv_url: cvUrl,
+            sertifikat_url: sertifikatUrl,
+        });
 
         return NextResponse.json({ success: true });
     } catch (error) {
