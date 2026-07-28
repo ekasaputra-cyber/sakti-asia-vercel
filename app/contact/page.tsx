@@ -20,6 +20,9 @@ const FALLBACK_CONTACT: OrgContact = {
   email: "himapro.sakti@gmail.com",
   office_hours: "Senin - Jumat, 09.00 - 16.00 WIB",
   maps_query: null,
+  instagram_url: null,
+  youtube_url: null,
+  github_url: null,
 };
 
 export default function ContactPage() {
