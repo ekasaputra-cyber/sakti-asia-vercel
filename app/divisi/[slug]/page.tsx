@@ -10,7 +10,12 @@ export default async function DivisiDetail({
 }) {
   const { slug } = await params;
 
-  const dept = await getDepartment(slug);
+  let dept: Awaited<ReturnType<typeof getDepartment>> = null;
+  try {
+    dept = await getDepartment(slug);
+  } catch {
+    // Backend belum bisa diakses — treat sama kayak "nggak ketemu".
+  }
 
   if (!dept) {
     return notFound();

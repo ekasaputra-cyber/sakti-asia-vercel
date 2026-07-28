@@ -5,9 +5,19 @@ import DivisiSearch from "@/components/org/divisiSearch";
 import { Layers } from "lucide-react";
 
 export default async function DivisiPage() {
-  const leadership = await getLeadership();
-  const coreBoard = await getBoard();
-  const departments = await getDepartments();
+  let leadership: Awaited<ReturnType<typeof getLeadership>> = [];
+  let coreBoard: Awaited<ReturnType<typeof getBoard>> = [];
+  let departments: Awaited<ReturnType<typeof getDepartments>> = [];
+
+  try {
+    [leadership, coreBoard, departments] = await Promise.all([
+      getLeadership(),
+      getBoard(),
+      getDepartments(),
+    ]);
+  } catch {
+    // Backend belum bisa diakses — tampilkan halaman kosong daripada crash.
+  }
 
   const ketua = leadership.find((l) => l.role === "Ketua Umum");
   const wakil = leadership.find((l) => l.role === "Wakil Ketua");

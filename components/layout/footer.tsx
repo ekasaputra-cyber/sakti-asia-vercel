@@ -1,10 +1,27 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Github, Instagram, Youtube, Mail, MapPin } from "lucide-react";
-import { getContactInfo } from "@/lib/api";
+import { getContactInfo, OrgContact } from "@/lib/api";
+
+// Dipakai kalau API Laravel nggak bisa diakses (misal pas proses build di
+// Vercel, sebelum backend-nya online publik) — biar build/render nggak crash.
+const FALLBACK_CONTACT: OrgContact = {
+  address: "Institut Teknologi dan Bisnis Asia Malang",
+  email: "himapro.sakti@gmail.com",
+  office_hours: "Senin - Jumat, 09.00 - 16.00 WIB",
+  maps_query: null,
+  instagram_url: null,
+  youtube_url: null,
+  github_url: null,
+};
 
 export default async function Footer() {
-  const contact = await getContactInfo();
+  let contact: OrgContact;
+  try {
+    contact = await getContactInfo();
+  } catch {
+    contact = FALLBACK_CONTACT;
+  }
 
   return (
     <footer className="border-t border-yellow-500/10 bg-black text-slate-400 pt-16 pb-8">

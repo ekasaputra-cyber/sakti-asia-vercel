@@ -10,7 +10,13 @@ import {
 } from "lucide-react";
 
 export default async function ProfilPage() {
-  const demisioners = await getDemissioners();
+  let demisioners: Awaited<ReturnType<typeof getDemissioners>> = [];
+  try {
+    demisioners = await getDemissioners();
+  } catch {
+    // Backend belum bisa diakses (misal pas build sebelum di-deploy publik) —
+    // tampilkan halaman tanpa data demisioner daripada bikin build gagal total.
+  }
 
   return (
     <div className="flex flex-col min-h-screen bg-slate-950 text-white">

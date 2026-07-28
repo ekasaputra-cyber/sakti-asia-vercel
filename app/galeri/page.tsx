@@ -4,7 +4,12 @@ import { Camera } from "lucide-react";
 import GalleryGrid from "@/components/gallery/galleryGrid";
 
 export default async function GaleriPage() {
-  const photos = await getGalleryPhotos();
+  let photos: Awaited<ReturnType<typeof getGalleryPhotos>> = [];
+  try {
+    photos = await getGalleryPhotos();
+  } catch {
+    // Backend belum bisa diakses — tampilkan galeri kosong daripada crash.
+  }
 
   return (
     <div className="flex flex-col min-h-screen bg-slate-950 text-white">
