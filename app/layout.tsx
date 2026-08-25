@@ -65,10 +65,13 @@ export const metadata: Metadata = {
     creator: "@sakti_id", // Ganti username twitter/X organisasi
   },
   
+  // Belum ada file favicon.ico / apple-touch-icon.png asli di /public,
+  // jadi sementara pakai logo.jpg biar tidak 404. Ganti ke file .ico/.png
+  // yang proper kalau sudah ada.
   icons: {
-    icon: "/favicon.ico",
+    icon: "/logo.jpg",
     shortcut: "/logo.jpg",
-    apple: "/apple-touch-icon.png",
+    apple: "/logo.jpg",
   },
 };
 

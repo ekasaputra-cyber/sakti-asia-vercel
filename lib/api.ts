@@ -1,3 +1,15 @@
+import {
+    leadershipData,
+    boardData,
+    departmentsData,
+    demissionersData,
+    eventsData,
+    statsData,
+    achievementsData,
+    galleryData,
+    contactData,
+} from "@/data/org-data";
+
 export interface Leader {
     id: number;
     position_key: string;
@@ -82,151 +94,64 @@ export interface OrgContact {
     github_url: string | null;
 }
 
-// Bentuk data mentah yang dikirim backend, sebelum dinormalisasi.
-// Field yang seharusnya array bisa datang sebagai string (belum di-cast di Laravel).
-type RawLeader = Omit<Leader, "misi"> & { misi: unknown };
-type RawDepartment = Omit<Department, "programs" | "skills" | "projects"> & {
-    programs: unknown;
-    skills: unknown;
-    projects: unknown;
-};
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
-// Base URL server Laravel tanpa "/api" di belakangnya, contoh: http://localhost:8000
-const STORAGE_BASE_URL = API_URL?.replace(/\/api\/?$/, "");
+// =====================================================================
+// Semua konten organisasi sekarang di-hardcode langsung di
+// data/org-data.ts, bukan lagi fetch dari backend Laravel.
+// Fungsi-fungsi di bawah ini sengaja tetap async (return Promise) biar
+// semua halaman yang sudah manggil pakai `await` / `.then()` tidak perlu
+// diubah sama sekali.
+// =====================================================================
 
-// Helper: gabungin path gambar dari database (contoh: "leaders/xxx.jpeg")
-// jadi URL lengkap ke storage Laravel (contoh: http://localhost:8000/storage/leaders/xxx.jpeg).
-// Kalau image sudah berupa URL lengkap (http/https), dipakai apa adanya.
+// Helper: kalau path gambar sudah berupa URL lengkap (http/https), dipakai
+// apa adanya. Kalau path lokal (misal "/foto/anu.jpg" di folder /public),
+// juga dipakai apa adanya. Return undefined kalau belum ada gambar sama
+// sekali, biar komponen UI otomatis nampilin fallback (inisial/ikon).
 export function getImageUrl(
     path: string | null | undefined,
 ): string | undefined {
     if (!path) return undefined;
-    if (path.startsWith("http://") || path.startsWith("https://")) return path;
-    const normalized = path.replace(/\\/g, "/");
-    const cleanPath = normalized.startsWith("/") ? normalized.slice(1) : normalized;
-    return `${STORAGE_BASE_URL}/storage/${cleanPath}`;
-}
-
-// Helper: pastikan field yang harusnya array beneran jadi array,
-// meski backend ngirim JSON string (misal karena belum di-cast di Laravel).
-function toArray<T = string>(value: unknown): T[] | null {
-    if (value === null || value === undefined) return null;
-    if (Array.isArray(value)) return value as T[];
-    if (typeof value === "string") {
-        try {
-            const parsed = JSON.parse(value);
-            return Array.isArray(parsed) ? (parsed as T[]) : null;
-        } catch {
-            return null;
-        }
-    }
-    return null;
-}
-
-function normalizeLeader(item: RawLeader): Leader {
-    return {
-        ...item,
-        misi: toArray<string>(item.misi),
-    };
-}
-
-function normalizeDepartment(item: RawDepartment): Department {
-    return {
-        ...item,
-        programs: toArray<string>(item.programs),
-        skills: toArray<string>(item.skills),
-        projects: toArray<string>(item.projects),
-    };
+    return path;
 }
 
 export async function getLeadership(): Promise<Leader[]> {
-    const res = await fetch(`${API_URL}/leadership`, {
-        next: { revalidate: 60 },
-    });
-    if (!res.ok) throw new Error("Gagal mengambil data leadership");
-    const json = await res.json();
-    return (json.data as RawLeader[]).map(normalizeLeader);
+    return leadershipData;
 }
 
 export async function getBoard(): Promise<BoardMember[]> {
-    const res = await fetch(`${API_URL}/board`, { next: { revalidate: 60 } });
-    if (!res.ok) throw new Error("Gagal mengambil data board");
-    const json = await res.json();
-    return json.data;
+    return boardData;
 }
 
 export async function getDepartments(): Promise<Department[]> {
-    const res = await fetch(`${API_URL}/departments`, {
-        next: { revalidate: 60 },
-    });
-    if (!res.ok) throw new Error("Gagal mengambil data departemen");
-    const json = await res.json();
-    return (json.data as RawDepartment[]).map(normalizeDepartment);
+    return departmentsData;
 }
 
-// Ambil 1 departemen berdasarkan slug. Return null kalau nggak ketemu
-// (404 dari backend), biar halaman detail bisa panggil notFound().
+// Ambil 1 departemen berdasarkan slug. Return null kalau nggak ketemu,
+// biar halaman detail bisa panggil notFound().
 export async function getDepartment(slug: string): Promise<Department | null> {
-    const res = await fetch(`${API_URL}/departments/${slug}`, {
-        next: { revalidate: 60 },
-    });
-    if (res.status === 404) return null;
-    if (!res.ok) throw new Error("Gagal mengambil data departemen");
-    const json = await res.json();
-    return normalizeDepartment(json.data as RawDepartment);
+    return departmentsData.find((dept) => dept.slug === slug) ?? null;
 }
 
 export async function getDemissioners(): Promise<Demissioner[]> {
-    const res = await fetch(`${API_URL}/demissioners`, {
-        next: { revalidate: 60 },
-    });
-    if (!res.ok) throw new Error("Gagal mengambil data demisioner");
-    const json = await res.json();
-    return json.data;
+    return demissionersData;
 }
 
 export async function getEvents(): Promise<OrgEvent[]> {
-    const res = await fetch(`${API_URL}/events`, {
-        next: { revalidate: 60 },
-    });
-    if (!res.ok) throw new Error("Gagal mengambil data agenda");
-    const json = await res.json();
-    return json.data;
+    return eventsData;
 }
 
 export async function getStats(): Promise<OrgStat[]> {
-    const res = await fetch(`${API_URL}/stats`, {
-        next: { revalidate: 60 },
-    });
-    if (!res.ok) throw new Error("Gagal mengambil data statistik");
-    const json = await res.json();
-    return json.data;
+    return statsData;
 }
 
 export async function getAchievements(): Promise<Achievement[]> {
-    const res = await fetch(`${API_URL}/achievements`, {
-        next: { revalidate: 60 },
-    });
-    if (!res.ok) throw new Error("Gagal mengambil data achievement");
-    const json = await res.json();
-    return json.data;
+    return achievementsData;
 }
 
 export async function getGalleryPhotos(): Promise<GalleryPhoto[]> {
-    const res = await fetch(`${API_URL}/gallery`, {
-        next: { revalidate: 60 },
-    });
-    if (!res.ok) throw new Error("Gagal mengambil data galeri");
-    const json = await res.json();
-    return json.data;
+    return galleryData;
 }
 
 export async function getContactInfo(): Promise<OrgContact> {
-    const res = await fetch(`${API_URL}/contact-info`, {
-        next: { revalidate: 60 },
-    });
-    if (!res.ok) throw new Error("Gagal mengambil data kontak");
-    const json = await res.json();
-    return json.data;
+    return contactData;
 }
