@@ -96,16 +96,15 @@ export default function DivisiSearch({
                     className="
                       text-3xl font-bold mb-2
                       text-yellow-400
-                      animate-pulse
                       drop-shadow-[0_0_6px_rgba(234,179,8,0.6)]
-                      transition-all duration-300
+                      transition-colors duration-300
                       group-hover:text-yellow-300
                       group-hover:drop-shadow-[0_0_12px_rgba(234,179,8,0.9)]
                     "
                   >
                     {dept.name}
                   </h3>
-                  <div className="h-[2px] w-0 bg-yellow-500 mx-auto transition-all duration-500 group-hover:w-24"></div>
+                  <div className="h-[2px] w-24 bg-yellow-500 mx-auto scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-center"></div>
                 </Link>
                 <div className="text-sm text-yellow-500 mb-2">
                   {dept.members.length} Anggota Aktif

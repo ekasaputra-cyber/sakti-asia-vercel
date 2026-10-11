@@ -24,7 +24,8 @@ import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { getLeadership, getEvents, getStats, getAchievements, getGalleryPhotos, getImageUrl, Leader, OrgEvent, OrgStat, Achievement, GalleryPhoto } from "@/lib/api";
 import TeamCard from "@/components/org/cardTeam";
 import AchievementCard from "@/components/org/achievementCard";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+import Reveal, { observeElement } from "@/components/ui/reveal";
 
 // Kotak preview galeri di home: nampilin foto asli kalau ada,
 // fallback ke kotak placeholder "Foto N" kalau slot itu belum diisi admin.
@@ -112,28 +113,53 @@ function AnimatedCounter({
   suffix?: string;
 }) {
   const [count, setCount] = useState(1);
+  const ref = useRef<HTMLSpanElement | null>(null);
 
   useEffect(() => {
-    let start = 1;
-    const duration = 1500; // 1.5 detik
-    const increment = target / (duration / 16);
+    if (
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
+      setCount(target);
+      return;
+    }
 
-    const counter = setInterval(() => {
-      start += increment;
+    const node = ref.current;
+    if (!node) return;
 
-      if (start >= target) {
-        setCount(target);
-        clearInterval(counter);
-      } else {
-        setCount(Math.floor(start));
-      }
-    }, 16);
+    let cancelAnimation: (() => void) | null = null;
 
-    return () => clearInterval(counter);
+    const unobserve = observeElement(node, () => {
+      const duration = 1200;
+      const startTime = performance.now();
+      let frameId: number;
+
+      const step = (now: number) => {
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const easeOut = 1 - Math.pow(1 - progress, 3);
+        const current = Math.floor(1 + (target - 1) * easeOut);
+        setCount(current);
+
+        if (progress < 1) {
+          frameId = requestAnimationFrame(step);
+        } else {
+          setCount(target);
+        }
+      };
+
+      frameId = requestAnimationFrame(step);
+      cancelAnimation = () => cancelAnimationFrame(frameId);
+    });
+
+    return () => {
+      unobserve();
+      if (cancelAnimation) cancelAnimation();
+    };
   }, [target]);
 
   return (
-    <span>
+    <span ref={ref}>
       {count}
       {suffix}
     </span>
@@ -258,14 +284,15 @@ export default function Home() {
         <div className="container px-6 md:px-12 lg:px-24">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {stats.map((item, i) => (
-              <div
+              <Reveal
                 key={i}
+                delay={i * 50}
                 className={`
             bg-black/60 backdrop-blur-sm
             rounded-2xl p-8
             border
-            hover:-translate-y-2
-            transition-all duration-300
+            hover:-translate-y-1.5
+            transition-[transform,border-color] duration-300
             text-center
             shadow-lg
             ${item.border}
@@ -280,7 +307,7 @@ export default function Home() {
                 <p className="text-slate-400 text-sm tracking-wide">
                   {item.label}
                 </p>
-              </div>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -289,7 +316,7 @@ export default function Home() {
       {/* --- SECTION 2: PIMPINAN & VISI MISI --- */}
       <section className="py-20 bg-slate-950 border-t border-slate-900 relative">
         {/* UBAH: Tambah padding px-6 md:px-12 */}
-        <div className="container px-6 md:px-12 lg:px-24">
+        <Reveal className="container px-6 md:px-12 lg:px-24">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-4 text-center">
@@ -340,7 +367,7 @@ export default function Home() {
               </div>
             </div>
           </div>
-        </div>
+        </Reveal>
       </section>
 
       {/* --- SECTION 3: AGENDA (DESAIN BARU: CIRCUIT TIMELINE) --- */}
