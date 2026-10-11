@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { Trophy, Users } from "lucide-react";
 import { getImageUrl } from "@/lib/api";
 
@@ -23,12 +24,13 @@ export default function AchievementCard({
     <div className="group relative rounded-2xl overflow-hidden aspect-4/5 md:aspect-auto md:h-100">
       <div className="absolute inset-0 bg-slate-800">
         {showImage ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={imageUrl}
+          <Image
+            src={imageUrl!}
             alt={name}
             onError={() => setImgError(true)}
-            className="w-full h-full object-cover"
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            className="object-cover"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-slate-700">

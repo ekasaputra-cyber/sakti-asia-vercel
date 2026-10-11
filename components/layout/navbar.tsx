@@ -48,6 +48,8 @@ export default function Navbar() {
                src="/logo.jpg" 
                alt="Logo SAKTI" 
                fill 
+               priority
+               sizes="40px"
                className="object-contain p-0.5" 
              />
           </div>
