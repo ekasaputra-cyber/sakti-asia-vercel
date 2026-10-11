@@ -31,7 +31,7 @@ export const leadershipData: Leader[] = [
     position_key: "ketua_umum",
     role: "Ketua Umum",
     name: "Gilang Dwi Hermawan",
-    image: "/divisi/Gilang.jpeg",
+    image: "/divisi/gilang.jpeg",
     visi:
       "Mewujudkan HIMAPRO TI SAKTI sebagai organisasi yang profesional, inovatif, dan kolaboratif dalam mengembangkan potensi mahasiswa Teknik Informatika serta memberikan kontribusi nyata bagi program studi.",
     misi: [
@@ -45,7 +45,7 @@ export const leadershipData: Leader[] = [
     position_key: "wakil_ketua",
     role: "Wakil Ketua",
     name: "Fika Aulia",
-    image: "/divisi/Fika.JPG",
+    image: "/divisi/fika.jpg",
     visi: null,
     misi: null,
   },
