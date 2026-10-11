@@ -39,6 +39,7 @@ export default async function Footer() {
                    src="/logo.jpg" 
                    alt="Logo SAKTI" 
                    fill 
+                   sizes="32px"
                    className="object-contain p-0.5"
                  />
                </div>

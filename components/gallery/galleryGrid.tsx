@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { ImageOff } from "lucide-react";
 import { getImageUrl, GalleryPhoto } from "@/lib/api";
 
@@ -12,11 +13,13 @@ function GalleryTile({ photo }: { photo: GalleryPhoto }) {
   return (
     <div className="group relative mb-4 break-inside-avoid rounded-2xl overflow-hidden border border-slate-800 bg-slate-900">
       {showImage ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={imageUrl}
+        <Image
+          src={imageUrl!}
           alt={photo.caption ?? "Dokumentasi kegiatan SAKTI"}
           onError={() => setImgError(true)}
+          width={800}
+          height={600}
+          sizes="(max-width: 768px) 50vw, 33vw"
           className="w-full h-auto object-cover transition-transform duration-300 group-hover:scale-105"
         />
       ) : (

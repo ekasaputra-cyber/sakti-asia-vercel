@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 // import { useState } from "react";
 import {
   ChevronRight,
@@ -40,17 +41,16 @@ function GalleryPreviewSlot({
 }) {
   const [imgError, setImgError] = useState(false);
   const imageUrl = photo ? getImageUrl(photo.image) : undefined;
-  const showImage = Boolean(imageUrl) && !imgError;
-
-  if (showImage) {
+  if (imageUrl && !imgError) {
     return (
-      <div className={`${className} overflow-hidden`}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
+      <div className={`${className} overflow-hidden relative`}>
+        <Image
           src={imageUrl}
           alt={photo?.caption ?? label}
           onError={() => setImgError(true)}
-          className="w-full h-full object-cover"
+          fill
+          sizes="(max-width: 768px) 50vw, 300px"
+          className="object-cover"
         />
       </div>
     );

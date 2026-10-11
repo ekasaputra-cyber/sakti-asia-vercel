@@ -58,6 +58,7 @@ export default async function ProfilPage() {
                     src="/logo.jpg"
                     alt="Logo SAKTI"
                     fill
+                    sizes="192px"
                     className="object-contain drop-shadow-[0_0_15px_rgba(234,179,8,0.5)]"
                   />
                 </div>

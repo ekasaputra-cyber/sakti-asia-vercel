@@ -31,7 +31,7 @@ export const leadershipData: Leader[] = [
     position_key: "ketua_umum",
     role: "Ketua Umum",
     name: "Gilang Dwi Hermawan",
-    image: "/divisi/gilang.jpeg",
+    image: "/divisi/Gilang.jpeg",
     visi:
       "Mewujudkan HIMAPRO TI SAKTI sebagai organisasi yang profesional, inovatif, dan kolaboratif dalam mengembangkan potensi mahasiswa Teknik Informatika serta memberikan kontribusi nyata bagi program studi.",
     misi: [
@@ -45,7 +45,7 @@ export const leadershipData: Leader[] = [
     position_key: "wakil_ketua",
     role: "Wakil Ketua",
     name: "Fika Aulia",
-    image: "/divisi/fika.jpg",
+    image: "/divisi/Fika.JPG",
     visi: null,
     misi: null,
   },
@@ -149,7 +149,7 @@ export const departmentsData: Department[] = [
       { id: 301, name: "Nathanael Ivan Susanto", role: "Koordinator", image: "/divisi/ivan.jpg" },
       { id: 302, name: "Jumiati", role: "Staff", image: "/divisi/mia.jpg" },
       { id: 303, name: "Dafit Fernandus Ferdi Hardiansyah", role: "Staff", image: "/divisi/dafit.jpg" },
-      { id: 305, name: "Khoirudin", role: "Staff", image: "/divisi/khoirudin.jpg" },
+      { id: 305, name: "Khoirudin", role: "Staff", image: null },
     ],
   },
 ];
