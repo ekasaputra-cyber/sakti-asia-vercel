@@ -17,7 +17,7 @@ import {
 // biar nggak ada layout kosong pas render pertama.
 const FALLBACK_CONTACT: OrgContact = {
   address: "Institut Teknologi dan Bisnis Asia Malang",
-  email: "himapro.sakti@gmail.com",
+  email: "himaprosakti@asia.ac.id",
   office_hours: "Senin - Jumat, 09.00 - 16.00 WIB",
   maps_query: null,
   instagram_url: null,
@@ -132,14 +132,17 @@ export default function ContactPage() {
               {contactInfo.maps_query && (
                 <div className="rounded-2xl overflow-hidden border border-slate-800 h-72">
                   <iframe
-                    src={`https://www.google.com/maps?q=${contactInfo.maps_query}&output=embed`}
+                    src="https://maps.google.com/maps?q=Institut+Asia&output=embed"
                     width="100%"
                     height="100%"
                     style={{ border: 0 }}
                     loading="lazy"
-                    title="Lokasi Sekretariat SAKTI"
+                    title="Lokasi ITB ASIA Malang"
+                    allowFullScreen
+                    referrerPolicy="no-referrer-when-downgrade"
                   />
                 </div>
+
               )}
             </div>
 
