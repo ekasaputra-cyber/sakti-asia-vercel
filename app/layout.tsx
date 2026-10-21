@@ -83,9 +83,9 @@ export default function RootLayout({
   return (
     // Tambahkan class 'dark' untuk memaksa mode gelap
     <html lang="id" className="dark scroll-smooth">
-      <body className={`${inter.className} antialiased bg-slate-950 text-white selection:bg-yellow-500 selection:text-black`}>
+      <body className={`${inter.className} antialiased bg-slate-950 text-white selection:bg-yellow-500 selection:text-black min-h-dvh flex flex-col`}>
         <Navbar />
-        <main className="relative overflow-x-hidden">
+        <main className="grow w-full relative overflow-x-hidden">
           {children}
         </main>
         <Footer />

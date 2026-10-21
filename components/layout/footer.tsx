@@ -24,14 +24,14 @@ export default async function Footer() {
   }
 
   return (
-    <footer className="border-t border-yellow-500/10 bg-black text-slate-400 pt-16 pb-8">
-      <div className="container px-4 md:px-8">
+    <footer className="border-t border-yellow-500/10 bg-black text-slate-400 pt-16 pb-8 overflow-hidden">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* --- TOP SECTION (Grid Layout) --- */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 mb-12">
           
           {/* 1. BRANDING & DESC */}
-          <div className="md:col-span-2 space-y-4">
+          <div className="sm:col-span-2 lg:col-span-2 space-y-4">
             <div className="flex gap-3 font-bold text-xl items-center text-white">
                {/* Logo Kecil */}
                <div className="relative h-8 w-8 overflow-hidden rounded bg-black border border-yellow-500/30">
@@ -45,7 +45,7 @@ export default async function Footer() {
                </div>
                <span>SAK<span className="text-yellow-500">TI</span></span>
             </div>
-            <p className="text-sm leading-relaxed max-w-sm text-slate-500">
+            <p className="text-sm leading-relaxed max-w-sm text-slate-500 break-words">
               Sindikat Akademi Teknik Informatika. Wadah kolaborasi mahasiswa TI untuk mengembangkan hard skill, soft skill, dan jejaring profesional di era digital.
             </p>
             <div className="flex gap-4 pt-2">
@@ -66,12 +66,12 @@ export default async function Footer() {
           <div>
             <h3 className="font-bold text-white mb-6">Navigasi</h3>
             <ul className="space-y-3 text-sm">
-              <li><Link href="/" className="hover:text-yellow-500 transition-colors">Beranda</Link></li>
-              <li><Link href="/profil" className="hover:text-yellow-500 transition-colors">Tentang Kami</Link></li>
-              <li><Link href="/divisi" className="hover:text-yellow-500 transition-colors">Divisi & Proker</Link></li>
-              <li><Link href="/blog" className="hover:text-yellow-500 transition-colors">Blog & Berita</Link></li>
-              <li><Link href="/contact" className="hover:text-yellow-500 transition-colors">Kontak</Link></li>
-              <li><Link href="/pendaftaran" className="hover:text-yellow-500 transition-colors">Open Recruitment</Link></li>
+              <li><Link href="/" className="hover:text-yellow-500 transition-colors inline-block py-1 min-h-[36px] flex items-center">Beranda</Link></li>
+              <li><Link href="/profil" className="hover:text-yellow-500 transition-colors inline-block py-1 min-h-[36px] flex items-center">Tentang Kami</Link></li>
+              <li><Link href="/divisi" className="hover:text-yellow-500 transition-colors inline-block py-1 min-h-[36px] flex items-center">Divisi & Proker</Link></li>
+              <li><Link href="/blog" className="hover:text-yellow-500 transition-colors inline-block py-1 min-h-[36px] flex items-center">Blog & Berita</Link></li>
+              <li><Link href="/contact" className="hover:text-yellow-500 transition-colors inline-block py-1 min-h-[36px] flex items-center">Kontak</Link></li>
+              <li><Link href="/pendaftaran" className="hover:text-yellow-500 transition-colors inline-block py-1 min-h-[36px] flex items-center">Open Recruitment</Link></li>
             </ul>
           </div>
 
@@ -79,15 +79,15 @@ export default async function Footer() {
           <div>
             <h3 className="font-bold text-white mb-6">Sekretariat</h3>
             <ul className="space-y-4 text-sm">
-              <li className="flex gap-3 items-start">
+              <li className="flex gap-3 items-start min-w-0">
                 <MapPin className="h-5 w-5 text-yellow-500 shrink-0 mt-0.5" />
-                <span className="whitespace-pre-line">
+                <span className="whitespace-pre-line break-words text-slate-400">
                   {contact.address}
                 </span>
               </li>
-              <li className="flex gap-3 items-center">
+              <li className="flex gap-3 items-center min-w-0">
                 <Mail className="h-5 w-5 text-yellow-500 shrink-0" />
-                <a href={`mailto:${contact.email}`} className="hover:text-yellow-500 transition-colors">
+                <a href={`mailto:${contact.email}`} className="hover:text-yellow-500 transition-colors break-all inline-block py-1">
                   {contact.email}
                 </a>
               </li>
@@ -97,11 +97,11 @@ export default async function Footer() {
         </div>
 
         {/* --- BOTTOM SECTION (Copyright) --- */}
-        <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-600">
+        <div className="border-t border-white/5 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-slate-600">
           <p>&copy; {new Date().getFullYear()} SAKTI Organisasi TI. All rights reserved.</p>
           <div className="flex gap-6">
-            <Link href="#" className="hover:text-slate-400">Privacy Policy</Link>
-            <Link href="#" className="hover:text-slate-400">Terms of Service</Link>
+            <Link href="#" className="hover:text-slate-400 py-1 inline-block min-h-[36px] flex items-center">Privacy Policy</Link>
+            <Link href="#" className="hover:text-slate-400 py-1 inline-block min-h-[36px] flex items-center">Terms of Service</Link>
           </div>
         </div>
       </div>
@@ -114,7 +114,7 @@ function SocialIcon({ icon: Icon, href }: { icon: any, href: string }) {
   return (
     <Link 
       href={href} 
-      className="h-10 w-10 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 hover:bg-yellow-500 hover:text-black hover:border-yellow-400 transition-all hover:scale-110"
+      className="h-11 w-11 min-h-[44px] min-w-[44px] rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 hover:bg-yellow-500 hover:text-black hover:border-yellow-400 transition-[transform,color,background-color,border-color] duration-200 hover:scale-110"
     >
       <Icon className="h-5 w-5" />
     </Link>

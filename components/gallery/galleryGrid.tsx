@@ -4,14 +4,25 @@ import { useState } from "react";
 import Image from "next/image";
 import { ImageOff } from "lucide-react";
 import { getImageUrl, GalleryPhoto } from "@/lib/api";
+import Reveal from "@/components/ui/reveal";
 
-function GalleryTile({ photo }: { photo: GalleryPhoto }) {
+function GalleryTile({
+  photo,
+  isInsideReveal,
+}: {
+  photo: GalleryPhoto;
+  isInsideReveal?: boolean;
+}) {
   const [imgError, setImgError] = useState(false);
   const imageUrl = getImageUrl(photo.image);
   const showImage = Boolean(imageUrl) && !imgError;
 
   return (
-    <div className="group relative mb-4 break-inside-avoid rounded-2xl overflow-hidden border border-slate-800 bg-slate-900">
+    <div
+      className={`group relative rounded-2xl overflow-hidden border border-slate-800 bg-slate-900 ${
+        isInsideReveal ? "" : "mb-4 break-inside-avoid"
+      }`}
+    >
       {showImage ? (
         <Image
           src={imageUrl!}
@@ -47,9 +58,21 @@ export default function GalleryGrid({ photos }: { photos: GalleryPhoto[] }) {
 
   return (
     <div className="columns-2 md:columns-3 gap-4">
-      {photos.map((photo) => (
-        <GalleryTile key={photo.id} photo={photo} />
-      ))}
+      {photos.map((photo, index) => {
+        if (index < 6) {
+          return <GalleryTile key={photo.id} photo={photo} />;
+        }
+
+        return (
+          <Reveal
+            key={photo.id}
+            delay={Math.min((index % 3) * 50, 150)}
+            className="mb-4 break-inside-avoid"
+          >
+            <GalleryTile photo={photo} isInsideReveal />
+          </Reveal>
+        );
+      })}
     </div>
   );
 }
