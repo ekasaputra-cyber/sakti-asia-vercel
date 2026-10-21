@@ -50,7 +50,7 @@ export default function AchievementCard({
           <p className="text-slate-300 text-sm">{achievement}</p>
         </div>
       </div>
-      <div className="absolute inset-0 border-2 border-transparent group-hover:border-yellow-500/50 rounded-2xl transition-colors pointer-events-none"></div>
+      <div className="absolute inset-0 border-2 border-transparent group-hover:border-yellow-500/50 rounded-2xl transition-colors duration-300 pointer-events-none"></div>
     </div>
   );
 }

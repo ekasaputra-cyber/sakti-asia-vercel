@@ -144,6 +144,29 @@
 }
 
 @layer utilities {
+  /* Konvensi Kontainer Responsif Terpadu */
+  .site-container {
+    width: 100%;
+    margin-inline: auto;
+    max-width: 80rem; /* 1280px / 7xl */
+    padding-inline: 1rem; /* 16px mobile */
+  }
+  @media (min-width: 640px) {
+    .site-container {
+      padding-inline: 1.5rem; /* 24px tablet */
+    }
+  }
+  @media (min-width: 1024px) {
+    .site-container {
+      padding-inline: 2rem; /* 32px desktop */
+    }
+  }
+
+  /* Memastikan utilitas container bawaan otomatis di tengah */
+  .container {
+    margin-inline: auto;
+  }
+
   /* Pattern Sarang Lebah (Hive) untuk Background */
   .bg-hive-pattern {
     background-color: transparent;

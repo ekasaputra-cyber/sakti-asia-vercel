@@ -14,13 +14,13 @@ export default function TeamCard({ member }: { member: Member }) {
     .toUpperCase();
 
   return (
-    <Card className="relative group overflow-hidden border border-slate-800 bg-slate-900/40 hover:border-yellow-500/50 transition-all duration-300 hover:shadow-[0_0_20px_-5px_rgba(234,179,8,0.3)]">
+    <Card className="relative group overflow-hidden border border-slate-800 bg-slate-900/40 hover:border-yellow-500/50 transition-[border-color] duration-300 hover:shadow-[0_0_20px_-5px_rgba(234,179,8,0.3)]">
       
       {/* --- HIASAN VISUAL TECH (Garis Pojok) --- */}
       {/* Pojok Kanan Atas */}
-      <div className="absolute top-0 right-0 w-6 h-6 border-t-2 border-r-2 border-slate-700 group-hover:border-yellow-500 transition-colors rounded-tr-sm opacity-50 group-hover:opacity-100"></div>
+      <div className="absolute top-0 right-0 w-6 h-6 border-t-2 border-r-2 border-slate-700 group-hover:border-yellow-500 transition-[border-color,opacity] duration-300 rounded-tr-sm opacity-50 group-hover:opacity-100"></div>
       {/* Pojok Kiri Bawah */}
-      <div className="absolute bottom-0 left-0 w-6 h-6 border-b-2 border-l-2 border-slate-700 group-hover:border-yellow-500 transition-colors rounded-bl-sm opacity-50 group-hover:opacity-100"></div>
+      <div className="absolute bottom-0 left-0 w-6 h-6 border-b-2 border-l-2 border-slate-700 group-hover:border-yellow-500 transition-[border-color,opacity] duration-300 rounded-bl-sm opacity-50 group-hover:opacity-100"></div>
 
       <CardContent className="p-6 flex flex-col items-center gap-4 relative z-10">
         

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import TeamCard from "@/components/org/cardTeam";
+import Reveal from "@/components/ui/reveal";
 import { Department } from "@/lib/api";
 
 export default function DivisiSearch({
@@ -54,7 +55,7 @@ export default function DivisiSearch({
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Cari nama anggota..."
-              className="w-full bg-black border border-slate-800 rounded-xl px-4 py-3 text-slate-300 focus:outline-none focus:border-yellow-500 transition"
+              className="w-full bg-black border border-slate-800 rounded-xl px-4 py-3 text-slate-300 focus:outline-none focus:border-yellow-500 transition-colors duration-200"
             />
           </div>
 
@@ -63,7 +64,7 @@ export default function DivisiSearch({
               <a
                 key={dept.id}
                 href={`#dept-${dept.id}`}
-                className="px-4 py-2 bg-black border border-slate-800 rounded-full text-sm text-slate-400 hover:text-yellow-500 hover:border-yellow-500 transition"
+                className="px-4 py-2 bg-black border border-slate-800 rounded-full text-sm text-slate-400 hover:text-yellow-500 hover:border-yellow-500 transition-colors duration-200"
               >
                 {dept.name}
               </a>
@@ -87,7 +88,7 @@ export default function DivisiSearch({
               id={`dept-${dept.id}`}
               className="relative scroll-mt-24"
             >
-              <div className="flex flex-col items-center text-center mb-10 max-w-3xl mx-auto">
+              <Reveal className="flex flex-col items-center text-center mb-10 max-w-3xl mx-auto">
                 <div className="h-12 w-12 bg-slate-900 rounded-xl border border-slate-800 flex items-center justify-center text-yellow-500 mb-4 shadow-[0_0_20px_-5px_rgba(234,179,8,0.2)]">
                   <Users className="h-6 w-6" />
                 </div>
@@ -111,11 +112,22 @@ export default function DivisiSearch({
                 </div>
                 <p className="text-slate-400">{dept.description}</p>
                 <div className="h-1 w-20 bg-linear-to-r from-transparent via-slate-800 to-transparent mt-6"></div>
-              </div>
+              </Reveal>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-center">
                 {dept.members.length > 0 ? (
-                  dept.members.map((m) => <TeamCard key={m.id} member={m} />)
+                  dept.members.map((m, mIdx) =>
+                    mIdx < 6 ? (
+                      <TeamCard key={m.id} member={m} />
+                    ) : (
+                      <Reveal
+                        key={m.id}
+                        delay={Math.min((mIdx % 4) * 40, 160)}
+                      >
+                        <TeamCard member={m} />
+                      </Reveal>
+                    )
+                  )
                 ) : (
                   <div className="col-span-full flex justify-center">
                     <div className="w-full max-w-md py-10 border border-dashed border-slate-800 rounded-xl bg-slate-900/20 flex flex-col items-center justify-center text-center hover:border-yellow-500/30 transition-colors">

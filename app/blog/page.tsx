@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import Reveal from "@/components/ui/reveal";
 import {
   ArrowRight,
   Calendar,
@@ -162,7 +163,7 @@ export default function BlogPage() {
 
           {/* Search Bar */}
           <div className="max-w-md mx-auto relative group">
-            <div className="absolute -inset-1 bg-linear-to-r from-yellow-500 to-amber-600 rounded-lg blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
+            <div className="absolute -inset-1 bg-linear-to-r from-yellow-500 to-amber-600 rounded-lg blur opacity-25 group-hover:opacity-50 transition-opacity duration-300"></div>
             <div className="relative flex items-center">
               <Search className="absolute left-3 h-5 w-5 text-slate-500" />
               <input
@@ -170,7 +171,7 @@ export default function BlogPage() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Cari topik (misal: React, AI, Skripsi)..."
-                className="w-full h-12 pl-10 pr-4 bg-slate-900 border border-slate-800 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 transition-all"
+                className="w-full h-12 pl-10 pr-4 bg-slate-900 border border-slate-800 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 transition-[border-color,box-shadow] duration-200"
               />
             </div>
           </div>
@@ -198,7 +199,7 @@ export default function BlogPage() {
                   <a href={featuredPost.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block relative rounded-2xl overflow-hidden border border-slate-800 bg-slate-900 group hover:border-yellow-500/50 transition-all cursor-pointer"
+                  className="block relative rounded-2xl overflow-hidden border border-slate-800 bg-slate-900 group hover:border-yellow-500/50 transition-[border-color] duration-200 cursor-pointer"
                 >
                   <div className="grid md:grid-cols-2">
                     {/* Image Placeholder */}
@@ -238,7 +239,7 @@ export default function BlogPage() {
                         <span className="text-sm font-medium text-white">
                           {getSourceLabel(featuredPost.source)}
                         </span>
-                        <ArrowRight className="ml-auto h-5 w-5 text-slate-500 group-hover:text-yellow-500 group-hover:translate-x-1 transition-all" />
+                        <ArrowRight className="ml-auto h-5 w-5 text-slate-500 group-hover:text-yellow-500 group-hover:translate-x-1 transition-transform duration-200" />
                       </div>
                     </div>
                   </div>
@@ -286,13 +287,12 @@ export default function BlogPage() {
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {sortedPosts.map((post, i) => {
                     const Icon = CATEGORY_ICONS[post.category] ?? Cpu;
-                    return (
-                      
-                       <a  key={i}
+                    const card = (
+                      <a
                         href={post.link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="group flex flex-col h-full bg-slate-900/50 border border-slate-800 rounded-xl overflow-hidden hover:border-yellow-500/50 hover:bg-slate-900 transition-all duration-300 cursor-pointer"
+                        className="group flex flex-col h-full bg-slate-900/50 border border-slate-800 rounded-xl overflow-hidden hover:border-yellow-500/50 hover:bg-slate-900 transition-[border-color,background-color] duration-200 cursor-pointer"
                       >
                         {/* Card Header (Icon as Image) */}
                         <div className="h-40 bg-black/50 relative flex items-center justify-center border-b border-slate-800 group-hover:bg-yellow-500/5 transition-colors">
@@ -324,10 +324,22 @@ export default function BlogPage() {
                             <span className="text-xs font-bold text-slate-500 group-hover:text-white transition-colors">
                               Baca Selengkapnya
                             </span>
-                            <ArrowRight className="h-4 w-4 text-slate-500 group-hover:text-yellow-500 group-hover:translate-x-1 transition-all" />
+                            <ArrowRight className="h-4 w-4 text-slate-500 group-hover:text-yellow-500 group-hover:translate-x-1 transition-transform duration-200" />
                           </div>
                         </div>
                       </a>
+                    );
+
+                    // 6 artikel pertama tampil langsung; artikel berikutnya di load awal memakai Reveal;
+                    // artikel tambahan dari "muat lebih banyak" muncul biasa tanpa Reveal.
+                    if (i < 6 || i >= 11) {
+                      return <div key={post.link || i}>{card}</div>;
+                    }
+
+                    return (
+                      <Reveal key={post.link || i} delay={Math.min((i % 3) * 50, 150)}>
+                        {card}
+                      </Reveal>
                     );
                   })}
                 </div>

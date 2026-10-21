@@ -283,32 +283,40 @@ export default function Home() {
       <section className="py-20 bg-slate-950 border-y border-slate-900">
         <div className="container px-6 md:px-12 lg:px-24">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {stats.map((item, i) => (
-              <Reveal
-                key={i}
-                delay={i * 50}
-                className={`
-            bg-black/60 backdrop-blur-sm
-            rounded-2xl p-8
-            border
-            hover:-translate-y-1.5
-            transition-[transform,border-color] duration-300
-            text-center
-            shadow-lg
-            ${item.border}
-          `}
-              >
-                <h3
-                  className={`text-3xl md:text-4xl font-extrabold mb-2 ${item.text}`}
+            {stats.map((item, i) => {
+              const card = (
+                <div
+                  className={`
+                    bg-black/60 backdrop-blur-sm
+                    rounded-2xl p-8
+                    border
+                    hover:-translate-y-1.5
+                    transition-[transform,border-color] duration-300
+                    text-center
+                    shadow-lg
+                    ${item.border}
+                  `}
                 >
-                  <AnimatedCounter target={item.number} suffix={item.suffix} />
-                </h3>
+                  <h3
+                    className={`text-3xl md:text-4xl font-extrabold mb-2 ${item.text}`}
+                  >
+                    <AnimatedCounter target={item.number} suffix={item.suffix} />
+                  </h3>
 
-                <p className="text-slate-400 text-sm tracking-wide">
-                  {item.label}
-                </p>
-              </Reveal>
-            ))}
+                  <p className="text-slate-400 text-sm tracking-wide">
+                    {item.label}
+                  </p>
+                </div>
+              );
+
+              return i === 0 ? (
+                <div key={i}>{card}</div>
+              ) : (
+                <Reveal key={i} delay={i * 50}>
+                  {card}
+                </Reveal>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -374,7 +382,7 @@ export default function Home() {
       <section className="py-24 bg-black relative">
         {/* UBAH: Tambah padding px-6 md:px-12 */}
         <div className="container px-6 md:px-12 lg:px-24">
-          <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6 border-b border-slate-800 pb-8">
+          <Reveal className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6 border-b border-slate-800 pb-8">
             <div className="max-w-2xl">
               <Badge
                 variant="outline"
@@ -458,7 +466,7 @@ export default function Home() {
                 </div>
               </DialogContent>
             </Dialog>
-          </div>
+          </Reveal>
 
           <div className="relative max-w-5xl mx-auto">
             <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-0.5 bg-slate-800 md:transform md:-translate-x-1/2">
@@ -466,43 +474,52 @@ export default function Home() {
             </div>
 
             <div className="space-y-12">
-              {prokers.map((item, index) => (
-                <div
-                  key={index}
-                  className={`relative flex flex-col md:flex-row items-start md:items-center gap-8 ${index % 2 === 0 ? "md:flex-row-reverse" : ""}`}
-                >
-                  <div className="flex-1 w-full pl-12 md:pl-0">
-                    <div
-                      className={`group relative p-6 bg-slate-900/50 border border-slate-800 rounded-xl hover:border-yellow-500/50 hover:bg-slate-900 transition-all duration-300 ${index % 2 === 0 ? "md:text-left" : "md:text-right"}`}
-                    >
+              {prokers.map((item, index) => {
+                const row = (
+                  <div
+                    className={`relative flex flex-col md:flex-row items-start md:items-center gap-8 ${index % 2 === 0 ? "md:flex-row-reverse" : ""}`}
+                  >
+                    <div className="flex-1 w-full pl-12 md:pl-0">
                       <div
-                        className={`hidden md:block absolute top-1/2 w-8 h-px bg-slate-700 group-hover:bg-yellow-500/50 transition-colors ${index % 2 === 0 ? "-left-8" : "-right-8"}`}
-                      ></div>
-                      <div
-                        className={`flex items-center gap-3 mb-3 ${index % 2 === 0 ? "md:justify-start" : "md:justify-end"}`}
+                        className={`group relative p-6 bg-slate-900/50 border border-slate-800 rounded-xl hover:border-yellow-500/50 hover:bg-slate-900 transition-[border-color,background-color] duration-300 ${index % 2 === 0 ? "md:text-left" : "md:text-right"}`}
                       >
-                        <Badge className="bg-yellow-500/10 text-yellow-500 border-yellow-500/20 hover:bg-yellow-500 hover:text-black transition-colors">
-                          {item.category}
-                        </Badge>
-                        <div className="flex items-center text-xs text-slate-400 gap-1">
-                          <Clock className="h-3 w-3" />
-                          {item.date}
+                        <div
+                          className={`hidden md:block absolute top-1/2 w-8 h-px bg-slate-700 group-hover:bg-yellow-500/50 transition-colors ${index % 2 === 0 ? "-left-8" : "-right-8"}`}
+                        ></div>
+                        <div
+                          className={`flex items-center gap-3 mb-3 ${index % 2 === 0 ? "md:justify-start" : "md:justify-end"}`}
+                        >
+                          <Badge className="bg-yellow-500/10 text-yellow-500 border-yellow-500/20 hover:bg-yellow-500 hover:text-black transition-colors">
+                            {item.category}
+                          </Badge>
+                          <div className="flex items-center text-xs text-slate-400 gap-1">
+                            <Clock className="h-3 w-3" />
+                            {item.date}
+                          </div>
                         </div>
+                        <h3 className="text-xl font-bold text-white mb-2 group-hover:text-yellow-400 transition-colors">
+                          {item.title}
+                        </h3>
+                        <p className="text-sm text-slate-400 leading-relaxed">
+                          {item.desc}
+                        </p>
                       </div>
-                      <h3 className="text-xl font-bold text-white mb-2 group-hover:text-yellow-400 transition-colors">
-                        {item.title}
-                      </h3>
-                      <p className="text-sm text-slate-400 leading-relaxed">
-                        {item.desc}
-                      </p>
                     </div>
+                    <div className="absolute left-4 md:left-1/2 transform -translate-x-1/2 flex items-center justify-center">
+                      <div className="h-4 w-4 bg-black rounded-full border-2 border-yellow-500 shadow-[0_0_10px_rgba(234,179,8,0.8)] z-10"></div>
+                    </div>
+                    <div className="flex-1 hidden md:block"></div>
                   </div>
-                  <div className="absolute left-4 md:left-1/2 transform -translate-x-1/2 flex items-center justify-center">
-                    <div className="h-4 w-4 bg-black rounded-full border-2 border-yellow-500 shadow-[0_0_10px_rgba(234,179,8,0.8)] z-10"></div>
-                  </div>
-                  <div className="flex-1 hidden md:block"></div>
-                </div>
-              ))}
+                );
+
+                return index === 0 ? (
+                  <div key={index}>{row}</div>
+                ) : (
+                  <Reveal key={index} delay={Math.min(index * 50, 150)}>
+                    {row}
+                  </Reveal>
+                );
+              })}
             </div>
             <div className="absolute bottom-0 left-4 md:left-1/2 transform -translate-x-1/2 translate-y-full pt-4">
               <div className="h-2 w-2 bg-slate-700 rounded-full"></div>
@@ -515,7 +532,7 @@ export default function Home() {
       <section className="py-20 bg-slate-950 border-y border-slate-900">
         {/* UBAH: Tambah padding px-6 md:px-12 */}
         <div className="container px-6 md:px-12 lg:px-24">
-          <div className="text-center mb-12">
+          <Reveal className="text-center mb-12">
             <Badge
               variant="outline"
               className="mb-4 border-yellow-500/30 text-yellow-400"
@@ -528,29 +545,38 @@ export default function Home() {
             <p className="text-slate-400 mt-2">
               Bukti nyata kualitas SDM Organisasi SAKTI.
             </p>
-          </div>
+          </Reveal>
           <div className="grid md:grid-cols-3 gap-8">
-            {achievements.map((item) => (
-              <AchievementCard
-                key={item.id}
-                name={item.name}
-                achievement={item.achievement}
-                badge={item.badge}
-                image={item.image}
-              />
-            ))}
+            {achievements.map((item, index) => {
+              const card = (
+                <AchievementCard
+                  name={item.name}
+                  achievement={item.achievement}
+                  badge={item.badge}
+                  image={item.image}
+                />
+              );
+
+              return index === 0 ? (
+                <div key={item.id}>{card}</div>
+              ) : (
+                <Reveal key={item.id} delay={index * 50}>
+                  {card}
+                </Reveal>
+              );
+            })}
           </div>
         </div>
       </section>
       {/* --- SECTION: TESTIMONI --- */}
       <section className="py-20 bg-black">
         <div className="container px-6 md:px-12 lg:px-24">
-          <div className="text-center mb-12">
+          <Reveal className="text-center mb-12">
             <h2 className="text-3xl font-bold text-white">Apa Kata Mereka?</h2>
             <p className="text-slate-400 mt-2">
               Cerita dari alumni & anggota SAKTI.
             </p>
-          </div>
+          </Reveal>
 
           <div className="grid md:grid-cols-3 gap-8">
             {[
@@ -566,24 +592,34 @@ export default function Home() {
                 name: "Dosen Pembina",
                 text: "Organisasi yang aktif, progresif, dan berdampak nyata bagi mahasiswa.",
               },
-            ].map((item, i) => (
-              <div
-                key={i}
-                className="bg-slate-900 p-6 rounded-xl border border-slate-800 hover:border-yellow-500/30 transition-colors"
-              >
-                <p className="text-slate-300 italic mb-4">&quot;{item.text}&quot;</p>
-                <h4 className="text-yellow-500 font-semibold">{item.name}</h4>
-              </div>
-            ))}
+            ].map((item, i) => {
+              const card = (
+                <div
+                  className="bg-slate-900 p-6 rounded-xl border border-slate-800 hover:border-yellow-500/30 transition-colors"
+                >
+                  <p className="text-slate-300 italic mb-4">&quot;{item.text}&quot;</p>
+                  <h4 className="text-yellow-500 font-semibold">{item.name}</h4>
+                </div>
+              );
+
+              return i === 0 ? (
+                <div key={i}>{card}</div>
+              ) : (
+                <Reveal key={i} delay={i * 50}>
+                  {card}
+                </Reveal>
+              );
+            })}
           </div>
         </div>
       </section>
+
       {/* --- SECTION 5: DIDIKAN ANAK TI --- */}
       <section className="py-20 bg-black">
         {/* UBAH: Tambah padding px-6 md:px-12 */}
         <div className="container px-6 md:px-12 lg:px-24">
           <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div className="space-y-6">
+            <Reveal className="space-y-6">
               <h2 className="text-4xl font-extrabold text-white">
                 Bukan Sekadar <br />
                 <span className="text-yellow-500">Himpunan Biasa.</span>
@@ -610,7 +646,7 @@ export default function Home() {
                   </li>
                 ))}
               </ul>
-            </div>
+            </Reveal>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-4 mt-8">
                 <GalleryPreviewSlot
@@ -618,24 +654,30 @@ export default function Home() {
                   label="Foto 1"
                   className="h-40 w-full bg-slate-800 rounded-2xl border border-slate-700"
                 />
-                <GalleryPreviewSlot
-                  photo={galleryPhotos[1]}
-                  label="Foto 2"
-                  className="h-56 w-full bg-slate-900 rounded-2xl border border-slate-800"
-                />
+                <Reveal delay={50}>
+                  <GalleryPreviewSlot
+                    photo={galleryPhotos[1]}
+                    label="Foto 2"
+                    className="h-56 w-full bg-slate-900 rounded-2xl border border-slate-800"
+                  />
+                </Reveal>
               </div>
               <div className="space-y-4">
-                <GalleryPreviewSlot
-                  photo={galleryPhotos[2]}
-                  label="Foto 3"
-                  className="h-56 w-full bg-yellow-500/10 rounded-2xl border border-yellow-500/20"
-                  textClassName="text-yellow-500/50"
-                />
-                <GalleryPreviewSlot
-                  photo={galleryPhotos[3]}
-                  label="Foto 4"
-                  className="h-40 w-full bg-slate-800 rounded-2xl border border-slate-700"
-                />
+                <Reveal delay={50}>
+                  <GalleryPreviewSlot
+                    photo={galleryPhotos[2]}
+                    label="Foto 3"
+                    className="h-56 w-full bg-yellow-500/10 rounded-2xl border border-yellow-500/20"
+                    textClassName="text-yellow-500/50"
+                  />
+                </Reveal>
+                <Reveal delay={100}>
+                  <GalleryPreviewSlot
+                    photo={galleryPhotos[3]}
+                    label="Foto 4"
+                    className="h-40 w-full bg-slate-800 rounded-2xl border border-slate-700"
+                  />
+                </Reveal>
               </div>
             </div>
           </div>
@@ -644,7 +686,7 @@ export default function Home() {
 
       {/* --- SECTION: PUNYA PERTANYAAN? --- */}
       <section className="py-20 bg-black text-center border-t border-slate-900">
-        <div className="container px-6 md:px-12 lg:px-24">
+        <Reveal className="container px-6 md:px-12 lg:px-24">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             Masih Punya Pertanyaan?
           </h2>
@@ -669,16 +711,16 @@ export default function Home() {
               </Button>
             </Link>
           </div>
-        </div>
+        </Reveal>
       </section>
       {/* --- SECTION: FAQ --- */}
       <section
         id="faq"
         className="py-20 bg-slate-950 border-t border-slate-900">
         <div className="mx-auto max-w-3xl px-6">
-          <h2 className="text-3xl font-bold text-center text-white mb-12">
+          <Reveal className="text-3xl font-bold text-center text-white mb-12" as="h2">
             Frequently Asked Questions
-          </h2>
+          </Reveal>
 
           <div className="space-y-6">
             {[
@@ -694,15 +736,24 @@ export default function Home() {
                 q: "Manfaat apa yang bisa didapat setelah jadi anggota SAKTI?",
                 a: "Pengalaman organisasi, relasi antar mahasiswa TI, serta koneksi dengan organisasi ataupun komunitas diluar kampus melalui berbagai kegiatan SAKTI.",
               },
-            ].map((item, i) => (
-              <div
-                key={i}
-                className="bg-black/60 backdrop-blur-sm p-6 rounded-2xl border border-slate-800 hover:border-yellow-500/40 transition"
-              >
-                <h4 className="text-yellow-400 font-semibold mb-2">{item.q}</h4>
-                <p className="text-slate-400 leading-relaxed">{item.a}</p>
-              </div>
-            ))}
+            ].map((item, i) => {
+              const card = (
+                <div
+                  className="bg-black/60 backdrop-blur-sm p-6 rounded-2xl border border-slate-800 hover:border-yellow-500/40 transition-[border-color] duration-200"
+                >
+                  <h4 className="text-yellow-400 font-semibold mb-2">{item.q}</h4>
+                  <p className="text-slate-400 leading-relaxed">{item.a}</p>
+                </div>
+              );
+
+              return i === 0 ? (
+                <div key={i}>{card}</div>
+              ) : (
+                <Reveal key={i} delay={i * 50}>
+                  {card}
+                </Reveal>
+              );
+            })}
           </div>
         </div>
       </section>

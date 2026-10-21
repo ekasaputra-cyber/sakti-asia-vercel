@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { getDemissioners } from "@/lib/api";
+import Reveal from "@/components/ui/reveal";
 import {
   Crown,
   Info,
@@ -45,7 +46,7 @@ export default async function ProfilPage() {
 
       {/* --- STORY & PHILOSOPHY --- */}
       <section className="py-20 bg-black">
-        <div className="container px-4 md:px-6">
+        <Reveal className="container px-4 md:px-6">
           <div className="grid md:grid-cols-2 gap-16 items-center">
             {/* Kolom Kiri: Logo Besar & Filosofi */}
             <div className="relative group">
@@ -105,13 +106,13 @@ export default async function ProfilPage() {
               </div>
             </div>
           </div>
-        </div>
+        </Reveal>
       </section>
 
       {/* --- HALL OF FAME (DEMISIONER) --- */}
       <section className="py-20 bg-slate-950 border-t border-slate-900">
         <div className="container px-4 md:px-6">
-          <div className="text-center mb-16">
+          <Reveal className="text-center mb-16">
             <div className="inline-flex items-center justify-center p-3 bg-yellow-500/10 rounded-full mb-4">
               <History className="h-6 w-6 text-yellow-500" />
             </div>
@@ -119,7 +120,7 @@ export default async function ProfilPage() {
             <p className="text-slate-400 mt-2">
               Para pemimpin terdahulu yang telah meletakkan fondasi.
             </p>
-          </div>
+          </Reveal>
 
           {/* Timeline Style Layout */}
           <div className="relative max-w-4xl mx-auto">
@@ -127,46 +128,57 @@ export default async function ProfilPage() {
             <div className="absolute left-1/2 transform -translate-x-1/2 top-0 bottom-0 w-0.5 bg-slate-800 hidden md:block"></div>
 
             <div className="space-y-12">
-              {demisioners.map((dem, index) => (
-                <div
-                  key={dem.id}
-                  className={`flex flex-col md:flex-row items-center gap-8 ${index % 2 === 0 ? "md:flex-row-reverse" : ""}`}
-                >
-                  {/* Sisi 1: Kosong (Spacer) */}
-                  <div className="flex-1 w-full hidden md:block"></div>
+              {demisioners.map((dem, index) => {
+                const itemNode = (
+                  <div
+                    className={`flex flex-col md:flex-row items-center gap-8 ${index % 2 === 0 ? "md:flex-row-reverse" : ""}`}
+                  >
+                    {/* Sisi 1: Kosong (Spacer) */}
+                    <div className="flex-1 w-full hidden md:block"></div>
 
-                  {/* Sisi Tengah: Marker Tahun */}
-                  <div className="relative z-10 flex items-center justify-center h-12 w-12 rounded-full bg-slate-900 border-2 border-yellow-500 text-yellow-500 font-bold text-xs shrink-0 shadow-[0_0_15px_rgba(234,179,8,0.4)]">
-                    {dem.period?.substring(0, 4)}
-                  </div>
+                    {/* Sisi Tengah: Marker Tahun */}
+                    <div className="relative z-10 flex items-center justify-center h-12 w-12 rounded-full bg-slate-900 border-2 border-yellow-500 text-yellow-500 font-bold text-xs shrink-0 shadow-[0_0_15px_rgba(234,179,8,0.4)]">
+                      {dem.period?.substring(0, 4)}
+                    </div>
 
-                  {/* Sisi 2: Content Card */}
-                  <div className="flex-1 w-full">
-                    <div className="group relative p-6 bg-slate-900 border border-slate-800 rounded-xl hover:border-yellow-500/50 transition-all text-center md:text-left">
-                      <div className="absolute top-0 left-0 w-1 h-full bg-yellow-500 rounded-l-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    {/* Sisi 2: Content Card */}
+                    <div className="flex-1 w-full">
+                      <div className="group relative p-6 bg-slate-900 border border-slate-800 rounded-xl hover:border-yellow-500/50 transition-[border-color] duration-200 text-center md:text-left">
+                        <div className="absolute top-0 left-0 w-1 h-full bg-yellow-500 rounded-l-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
 
-                      <div className="flex items-center gap-4 mb-2 justify-center md:justify-start">
-                        <div className="h-10 w-10 bg-slate-800 rounded-full flex items-center justify-center">
-                          <Crown className="h-5 w-5 text-yellow-500" />
+                        <div className="flex items-center gap-4 mb-2 justify-center md:justify-start">
+                          <div className="h-10 w-10 bg-slate-800 rounded-full flex items-center justify-center">
+                            <Crown className="h-5 w-5 text-yellow-500" />
+                          </div>
+                          <div>
+                            <h3 className="text-xl font-bold text-white group-hover:text-yellow-400 transition-colors duration-200">
+                              {dem.name}
+                            </h3>
+                            <p className="text-xs text-slate-500 uppercase tracking-widest">
+                              Ketua Umum
+                            </p>
+                          </div>
                         </div>
-                        <div>
-                          <h3 className="text-xl font-bold text-white group-hover:text-yellow-400 transition-colors">
-                            {dem.name}
-                          </h3>
-                          <p className="text-xs text-slate-500 uppercase tracking-widest">
-                            Ketua Umum
-                          </p>
-                        </div>
+
+                        <p className="text-slate-400 text-sm mt-3">
+                          &quot;Masa bakti {dem.period}. Membawa SAKTI menuju era
+                          digitalisasi modern.&quot;
+                        </p>
                       </div>
-
-                      <p className="text-slate-400 text-sm mt-3">
-                        &quot;Masa bakti {dem.period}. Membawa SAKTI menuju era
-                        digitalisasi modern.&quot;
-                      </p>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+
+                if (index === 0) {
+                  return <div key={dem.id}>{itemNode}</div>;
+                }
+
+                return (
+                  <Reveal key={dem.id} delay={Math.min(index * 40, 160)}>
+                    {itemNode}
+                  </Reveal>
+                );
+              })}
             </div>
           </div>
         </div>

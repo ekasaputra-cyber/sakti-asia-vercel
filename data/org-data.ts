@@ -149,7 +149,7 @@ export const departmentsData: Department[] = [
       { id: 301, name: "Nathanael Ivan Susanto", role: "Koordinator", image: "/divisi/ivan.jpg" },
       { id: 302, name: "Jumiati", role: "Staff", image: "/divisi/mia.jpg" },
       { id: 303, name: "Dafit Fernandus Ferdi Hardiansyah", role: "Staff", image: "/divisi/dafit.jpg" },
-      { id: 305, name: "Khoirudin", role: "Staff", image: null },
+      { id: 305, name: "Khoirudin", role: "Staff", image: "/divisi/khoirudin.jpeg" },
     ],
   },
 ];

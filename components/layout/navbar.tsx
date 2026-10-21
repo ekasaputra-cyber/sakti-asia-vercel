@@ -39,7 +39,7 @@ export default function Navbar() {
   return (
     // NAVBAR UTAMA: Hitam Pekat dengan Border Kuning Tipis
     <nav className="border-b border-yellow-500/10 bg-slate-950/80 backdrop-blur-md sticky top-0 z-50 w-full text-white">
-      <div className="container flex h-16 items-center justify-between px-4 md:px-8">
+      <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
         
         {/* LOGO AREA */}
         <div className="flex gap-3 font-bold text-xl items-center">
@@ -53,7 +53,7 @@ export default function Navbar() {
                className="object-contain p-0.5" 
              />
           </div>
-          <Link href="/" className="tracking-wide hover:opacity-80 transition-opacity">
+          <Link href="/" className="tracking-wide hover:opacity-80 transition-opacity min-h-[44px] flex items-center">
             SAK<span className="text-yellow-500 text-shadow-sm">TI</span>
           </Link>
         </div>
@@ -69,7 +69,7 @@ export default function Navbar() {
                 key={link.href} 
                 href={link.href} 
                 className={`
-                  transition-all flex items-center gap-2 hover:scale-105
+                  transition-colors duration-200 flex items-center gap-2 py-2 min-h-[44px]
                   ${isActive 
                     ? "text-yellow-400 font-bold drop-shadow-[0_0_5px_rgba(250,204,21,0.5)]" // Style Aktif
                     : "text-slate-400 hover:text-yellow-400" // Style Tidak Aktif
@@ -86,7 +86,7 @@ export default function Navbar() {
         <div className="flex gap-3 items-center">
           {/* RIGHT AREA — Tombol Join desktop */}
           <Link href="/pendaftaran">
-            <Button size="sm" className="hidden md:flex font-bold bg-yellow-500 text-black hover:bg-yellow-400 shadow-[0_0_15px_-3px_rgba(234,179,8,0.6)] border-none transition-all">
+            <Button size="sm" className="hidden md:flex font-bold bg-yellow-500 text-black hover:bg-yellow-400 hover:scale-[1.02] shadow-[0_0_15px_-3px_rgba(234,179,8,0.6)] border-none transition-[transform,background-color] duration-200">
               Join Kami
             </Button>
           </Link>
@@ -95,14 +95,14 @@ export default function Navbar() {
           <div className="md:hidden">
             <Sheet>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="text-slate-200 hover:bg-yellow-500/20 hover:text-yellow-400 transition-colors">
+                <Button variant="ghost" size="icon" className="h-11 w-11 min-h-[44px] min-w-[44px] text-slate-200 hover:bg-yellow-500/20 hover:text-yellow-400 transition-colors">
                   <Menu className="h-6 w-6" />
                   <span className="sr-only">Toggle menu</span>
                 </Button>
               </SheetTrigger>
               
               {/* SHEET CONTENT: Background Hitam (Fixed) */}
-              <SheetContent side="right" className="flex flex-col h-full w-75 border-l border-yellow-500/20 bg-slate-950 text-white">
+              <SheetContent side="right" className="flex flex-col h-full w-[85vw] max-w-xs border-l border-yellow-500/20 bg-slate-950 text-white">
                 
                 <SheetHeader className="text-left mb-6">
                   <div className="flex items-center gap-3 mb-2">
@@ -124,7 +124,7 @@ export default function Navbar() {
                         key={link.href}
                         href={link.href}
                         className={`
-                          flex items-center justify-between p-3 rounded-lg transition-all group border
+                          flex items-center justify-between p-3 min-h-[44px] rounded-lg transition-colors duration-200 group border
                           ${isActive 
                             ? "bg-yellow-500/10 text-yellow-400 border-yellow-500/20 font-bold" // Style Mobile Aktif
                             : "text-slate-300 border-transparent hover:bg-yellow-500/10 hover:text-yellow-400 hover:border-yellow-500/20" // Style Mobile Biasa
@@ -146,19 +146,19 @@ export default function Navbar() {
                 {/* Footer Menu Mobile */}
                 <div className="mt-auto">
                   <Link href="/pendaftaran">
-                    <Button className="w-full mb-6 font-bold bg-yellow-500 text-black hover:bg-yellow-400" size="lg">
+                    <Button className="w-full mb-6 font-bold bg-yellow-500 text-black hover:bg-yellow-400 min-h-[44px]" size="lg">
                       Join Member Sekarang
                     </Button>
                   </Link>
                   
                   <div className="flex justify-center gap-6 pb-4 border-t border-slate-800 pt-6">
-                    <Link href="#" className="text-slate-500 hover:text-white transition-colors hover:scale-110">
+                    <Link href="#" className="text-slate-500 hover:text-white transition-[transform,color] duration-200 hover:scale-110 h-11 w-11 min-h-[44px] min-w-[44px] flex items-center justify-center">
                       <Github className="h-5 w-5" />
                     </Link>
-                    <Link href="#" className="text-slate-500 hover:text-pink-500 transition-colors hover:scale-110">
+                    <Link href="#" className="text-slate-500 hover:text-pink-500 transition-[transform,color] duration-200 hover:scale-110 h-11 w-11 min-h-[44px] min-w-[44px] flex items-center justify-center">
                       <Instagram className="h-5 w-5" />
                     </Link>
-                    <Link href="#" className="text-slate-500 hover:text-blue-500 transition-colors hover:scale-110">
+                    <Link href="#" className="text-slate-500 hover:text-blue-500 transition-[transform,color] duration-200 hover:scale-110 h-11 w-11 min-h-[44px] min-w-[44px] flex items-center justify-center">
                       <Linkedin className="h-5 w-5" />
                     </Link>
                   </div>
